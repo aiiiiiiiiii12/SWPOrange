@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Project.Data;
+using Project.Models;
 using WebApplication6.Service;
 
 namespace Project.Controllers
@@ -75,7 +76,184 @@ namespace Project.Controllers
 			}
 			return RedirectToAction("cfFeedback", "admin");
 		}
-		
 
-	}
+        //display product list
+        public IActionResult DashProduct()
+        {
+            LoadRoleUser();
+            List<Product> products = _shopContext.Products.ToList();
+            return View(products);
+        }
+
+
+        //Delete product
+        public IActionResult delProd(string productId)
+        {
+            LoadRoleUser();
+
+            var product = _shopContext.Products.FirstOrDefault(p => p.ProductId == Int32.Parse(productId));
+            if (product != null)
+            {
+                _shopContext.Products.Remove(product);
+                _shopContext.SaveChanges();
+                return Redirect("DashProduct");
+            }
+            return Redirect("Index");
+        }
+
+
+        //change product's Home Status
+        public IActionResult changeHomeStatus(string pid)
+        {
+            LoadRoleUser();
+
+            var product = _shopContext.Products.FirstOrDefault(p => p.ProductId == Int32.Parse(pid));
+            if (product != null)
+            {
+                if (product.HomeStatus == true)
+                {
+                    product.HomeStatus = false;
+                    _shopContext.Update(product);
+                    _shopContext.SaveChanges();
+                    return Redirect("DashProduct");
+                }
+                else
+                {
+                    product.HomeStatus = true;
+                    _shopContext.Update(product);
+                    _shopContext.SaveChanges();
+                    return Redirect("DashProduct");
+                }
+            }
+
+            return Redirect("Index");
+
+        }
+
+        //create product
+        public IActionResult CreateProduct()
+        {
+            LoadRoleUser();
+
+            List<SubCategory> subcate = _shopContext.SubCategory.ToList();
+
+            return View(subcate);
+        }
+
+        [HttpPost]
+        public IActionResult CreateProduct(IFormFile ImageUrl, Product product)
+        {
+            LoadRoleUser();
+
+            var imageURL = _cloudinaryService.UploadImage(ImageUrl, "MainImageProduct");
+
+            product.ImageMain = imageURL;
+            _shopContext.Add(product);
+            _shopContext.SaveChanges();
+
+            return Redirect("DashProduct");
+        }
+
+        public IActionResult ViewDetailProduct(int productId)
+        {
+            Product product = _shopContext.Products.FirstOrDefault(x => x.ProductId == productId);
+            if (product != null)
+            {
+                return View(product);
+            }
+            return Redirect("DashProduct");
+        }
+        public IActionResult UpdateProduct(int productId)
+        {
+            List<SubCategory> subcate = _shopContext.SubCategory.ToList();
+            Product product = _shopContext.Products.FirstOrDefault(x => x.ProductId == productId);
+
+
+            if (product != null)
+            {
+                ViewBag.Product = product;
+
+                return View(subcate);
+            }
+            return Redirect("DashProduct");
+        }
+
+        [HttpPost]
+        public IActionResult UpdateProduct(IFormFile ImageUrl, Product updateProd)
+        {
+            LoadRoleUser();
+            Product product = _shopContext.Products.FirstOrDefault(x => x.ProductId == updateProd.ProductId);
+
+            if (product != null)
+
+            {
+                product.ProductName = updateProd.ProductName;
+                product.ProductDescription = updateProd.ProductDescription;
+                product.SubCategoryID = updateProd.SubCategoryID;
+                product.ImportDate = updateProd.ImportDate;
+                product.ProductPrice = updateProd.ProductPrice;
+                product.Discount = updateProd.Discount;
+                product.HomeStatus = updateProd.HomeStatus;
+                product.IsAvailble = updateProd.IsAvailble;
+                if (ImageUrl != null)
+                {
+                    product.ImageMain = _cloudinaryService.UploadImage(ImageUrl, "MainImageProduct");
+                }
+
+                _shopContext.Update(product);
+                _shopContext.SaveChanges();
+                return Redirect("DashProduct");
+            }
+
+
+
+
+
+            return Redirect("DashProduct");
+        }
+
+
+
+        private void LoadRoleUser()
+        {
+            var user = HttpContext.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                if (user.IsInRole("Admin"))
+                {
+                    ViewBag.ShowAdminButton = true;
+                }
+                else
+                {
+                    ViewBag.ShowAdminButton = false;
+                }
+
+                if (user.IsInRole("Marketing"))
+                {
+                    ViewBag.ShowMarketingButton = true;
+                }
+                else
+                {
+                    ViewBag.ShowMarketingButton = false;
+                }
+
+                if (user.IsInRole("Seller"))
+                {
+                    ViewBag.ShowSellerButton = true;
+                }
+                else
+                {
+                    ViewBag.ShowSellerButton = false;
+                }
+            }
+            else
+            {
+                ViewBag.ShowAdminButton = false;
+                ViewBag.ShowMarketingButton = false;
+                ViewBag.ShowSellerButton = false;
+            }
+        }
+
+    }
 }
