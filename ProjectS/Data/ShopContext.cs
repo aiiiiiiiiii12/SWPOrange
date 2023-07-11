@@ -47,8 +47,27 @@ namespace Project.Data
 
 			});
 
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasKey(s => s.commentId);
+              
 
-			modelBuilder.Entity<WishList>(entity =>
+            });
+
+            modelBuilder.Entity<Answer>(entity =>
+            {
+                entity.HasKey(s => s.answerId);
+
+
+                entity.HasOne(d => d.Comment)
+                    .WithMany(p => p.Answers)
+                    .HasForeignKey(d => d.commentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__bills__paB5");
+            });
+
+
+            modelBuilder.Entity<WishList>(entity =>
 			{
 				entity.HasKey(s => s.WishListId);
 

@@ -122,22 +122,20 @@ namespace Project.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
 
-                    var x = _shopContext.Roles.Where(p => p.Name.Equals("Admin")).Select(p => p.Id).ToList();
-
+                    var x = _shopContext.Roles.Where(p => p.Name.Equals("Admin") || p.Name.Equals("Marketing") || p.Name.Equals("Seller")).Select(p => p.Id).ToList();
                     if (x.Count > 0)
                     {
                         var n = _shopContext.Users.Where(p => p.Email == Input.Email).Select(p => p.Id).ToList();
                         if (n.Count > 0)
                         {
-                            var t = _shopContext.UserRoles.Where(p => p.UserId.Equals(n[0])).Where(p => p.RoleId.Equals(x[0])).ToList();
+                            var t = _shopContext.UserRoles.Where(p => p.UserId.Equals(n[0])).Where(p => x.Contains(p.RoleId)).ToList();
+                            Console.WriteLine(t.Count);
                             if (t.Count > 0)
                             {
                                 return Redirect("/Admin/Index");
                             }
                         }
-                    
                     }
-
 
                     return LocalRedirect(returnUrl);
 

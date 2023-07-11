@@ -30,8 +30,7 @@
         </div>
     </div>
     <div style=" padding-bottom: 30px; margin-left: 30px; background-color: white" class="col-md-4">
-        vẽ biểu đồ vào đây (để ý col-md vs row mà xây dựng bố cục)
-        Phần này có thể đủ để chia thêm 2 row row trên vẽ 1 biểu đồ row dưới vẽ thêm 1 biểu đồ
+        <canvas id="myChart"></canvas>
     </div>
 </div>
 
@@ -87,4 +86,46 @@
             }
         }
     });
+
+
+    var colors = ['rgb(75, 192, 192)', 'rgb(255, 99, 132)', 'rgb(54, 162, 235)'];
+    var productData = [
+        { name: 'Sản phẩm A', sales: 100 },
+        { name: 'Sản phẩm B', sales: 75 },
+        { name: 'Sản phẩm C', sales: 50 },
+    ];
+
+    var labels = productData.map(function (item) {
+        return item.name;
+    });
+    var data = productData.map(function (item) {
+        return item.sales;
+    });
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Sản phẩm bán chạy nhất',
+                data: data,
+                backgroundColor: colors, 
+                borderColor: colors, 
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10
+                    }
+                }
+            }
+        }
+    });
+
+
 </script>

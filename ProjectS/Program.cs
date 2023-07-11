@@ -28,13 +28,6 @@ builder.Services.AddDbContext<ShopContext>(options =>
     options.UseMySql(connect, ServerVersion.AutoDetect(connect));
 });
 
-
-
-//builder.Services.AddDbContext<ShopContext>(options =>
-//{
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("ShopConnect"));
-//});
-
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.Password.RequireDigit = false; // Không bắt phải có số

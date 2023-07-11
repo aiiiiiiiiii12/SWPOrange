@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using PayPal.Api;
 using Project.Data;
 using Project.Models;
 using WebApplication6.Service;
@@ -22,6 +24,7 @@ namespace Project.Controllers
             double totalMonth = 0;
             double totalDay = 0;
             SortedDictionary<int, double> myDictionary = new SortedDictionary<int, double>();
+            SortedDictionary<int, string> myyDictionary = new SortedDictionary<int, string>();
 
             foreach (var l in x)
             {
@@ -45,6 +48,25 @@ namespace Project.Controllers
             ViewData["total"] = total;
             ViewData["totalMonth"] = totalMonth;
             ViewData["totaday"] = totalDay;
+
+            foreach (var l in x)
+            {
+                if (myDictionary.ContainsKey(l.PurchaseDate.Month))
+                {
+                    myDictionary[l.PurchaseDate.Month] += l.TotalPrice;
+                }
+                else
+                {
+                    myDictionary.Add(l.PurchaseDate.Month, l.TotalPrice);
+                }
+                total += l.TotalPrice;
+                if (l.PurchaseDate.Month == now.Month)
+                {
+                    totalMonth += l.TotalPrice;
+                    if (l.PurchaseDate.Day == now.Day)
+                        totalDay += l.TotalPrice;
+                }
+            }
             return View(myDictionary);
         }
 
@@ -213,6 +235,98 @@ namespace Project.Controllers
         }
 
 
+        //Detail Product
+        public IActionResult ViewDetailProd(int productId)
+        {
+            Product product = _shopContext.Products.FirstOrDefault(x =>x.ProductId == productId);
+            if (product != null)
+            {
+                List<ProductDetails> pr = _shopContext.productdetails.Where(x => x.productId == productId).ToList();
+                ViewBag.ProductDetails = pr;
+                List<ImageProduct> imgProd = _shopContext.ImageProducts.Where(x => x.ProductId == productId).ToList();
+                ViewBag.ImageProducts = imgProd;
+			}
+            return View(product);
+        }
+
+        //check product detail is exist
+        private Boolean checkDetailExist(ProductDetails detail)
+        {
+            if (detail != null)
+            {
+                List<ProductDetails> pr = _shopContext.productdetails.Where(x => x.productId == detail.productId).ToList();
+                foreach (ProductDetails a in pr)
+                {
+                    if (a.size == detail.size && a.color.Equals(detail.color))
+                    {
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
+        }
+
+        [HttpPost]
+        public IActionResult CreateProductDetail(ProductDetails details)
+        {
+            LoadRoleUser();
+            Boolean test = checkDetailExist(details);
+            string mess;
+            if (test)
+            {
+                _shopContext.Add(details);
+                _shopContext.SaveChanges();
+                mess = "create successfully";
+            }
+            else
+            {
+                mess = "create failed";
+            }
+            TempData["mess"] = mess;
+            return Redirect($"ViewDetailProd?productId={details.productId}");
+        }
+
+        //delete detail product
+        public IActionResult DelDetailProduct(int productDetailId)
+        {
+            var detailProd =_shopContext.productdetails.FirstOrDefault(x => x.productDetailId == productDetailId);
+            int prodId = detailProd.productId;
+            _shopContext.Remove(detailProd);
+            _shopContext.SaveChanges();
+            TempData["mess"] = " delete sucessfully";
+            return Redirect($"ViewDetailProd?productId={prodId}");
+        }
+
+
+        [HttpPost]
+        public IActionResult CreateImageProduct(IFormFile ImageUrl, ImageProduct imageProduct)
+        {
+            LoadRoleUser();
+
+            //return Redirect($"ViewDetailProd?productId={imageProduct.ProductId}");
+
+
+            var imageURL = _cloudinaryService.UploadImage(ImageUrl,"ImageProduct");
+
+            imageProduct.ImageURL = imageURL;
+            _shopContext.Add(imageProduct);
+            _shopContext.SaveChanges();
+            TempData["mess"] = " create sucessfully";
+            return Redirect($"ViewDetailProd?productId={imageProduct.ProductId}");
+        }
+
+        //delete Image Product
+        public IActionResult DelImageProduct(int ImageProductId)
+        {
+            ImageProduct img = _shopContext.ImageProducts.FirstOrDefault(x => x.ImageProductId == ImageProductId);
+            int prodId = img.ProductId;
+            _shopContext.Remove(img);
+            _shopContext.SaveChanges();
+
+            TempData["mess"] = "delete sucessfully";
+            return Redirect($"ViewDetailProd?productId={prodId}");
+        }
 
         private void LoadRoleUser()
         {

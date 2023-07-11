@@ -23,7 +23,6 @@ namespace Project.Controllers
 
         public IActionResult Index(string mode)
         {
-         
 
             var listProduct = _shopContext.Products.Where(p => p.HomeStatus == true);
             if (mode != null)
