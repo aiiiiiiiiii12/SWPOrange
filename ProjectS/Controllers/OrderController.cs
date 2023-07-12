@@ -79,21 +79,21 @@ namespace Project.Controllers
             }
             else if (payment == "1")
             {
-                _logger.LogError("xxxxx" + address);
                 if (string.IsNullOrEmpty(address))
                 {
                     TempData["ErrorA"] = "Thêm địa chỉ nhận hàng";
                     return RedirectToAction("Index", "Order");
                 }
                 var newBill = CreateBill(email, total, "1", address);
+                TempData["bill"] = newBill;
 
             }
             else{
                 return RedirectToAction("Index", "Order");
             }
 
-            
 
+           
             return View();
         }
         private Bill CreateBill(string email, string totalAmount, string paymentCode, string address)
@@ -216,6 +216,7 @@ namespace Project.Controllers
 
         public IActionResult ProcessOrder()
         {
+          
             return View();
         }
 
@@ -337,7 +338,7 @@ namespace Project.Controllers
             string publictotal = TempData["publictotal"] as string;
             var newBill = CreateBill(publicemail, publictotal, "2", addressString);
 
-
+            TempData["bill"] = newBill;
             return RedirectToAction("ProcessOrder");
         }
     }
