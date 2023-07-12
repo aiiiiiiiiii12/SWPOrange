@@ -1,4 +1,6 @@
-﻿namespace Project.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Project.Models
 {
     public class Answer
     {
@@ -8,5 +10,7 @@
         public int commentId { get; set; }
 
         public Comment Comment { get; set; }
+        public IdentityUser User { get; set; }
+
     }
 }

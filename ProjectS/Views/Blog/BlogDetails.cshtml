@@ -197,51 +197,66 @@
                             <div style="padding: 0px 135px" class="list-comments">
                                 <h2>COMMENTS</h2>
                                 <ul class="commentlist">
-                                    <li>
-                                        <div class="user-image"><img src="https://res.cloudinary.com/dtwmfo4fl/image/upload/v1688368768/4_ntnoty.jpg" alt="" class="img-responsive"></div>
-                                        <div class="comment-right">
-                                            <div class="comment-info">
-                                                <strong class="dark-color pull-left name">Angela Allen</strong> <div class="date-comment grey-color pull-right">July, 19th, 2016 on 10.30 PM</div>
+                                    @foreach (var comment in Model.Comment)
+                                    {
+                                        <li>
+                                            <div class="user-image">
+                                                <img src="https://res.cloudinary.com/dtwmfo4fl/image/upload/v1688368768/4_ntnoty.jpg" alt="" class="img-responsive">
                                             </div>
-                                            <p>Nunc risus ex, tempus quis purus ac, tempor consequat ex. Vivamus sem magna, maximus at est id, maximus aliquet nunc. Suspendisse lacinia velit a eros porttitor, in interdum ante faucibus.</p>
-                                            <a class="c-reply" href="#">Reply</a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <ul class="children">
-                                            <li>
-                                                <div class="user-image"><img class="img-responsive" src="https://res.cloudinary.com/dtwmfo4fl/image/upload/v1688368768/4_ntnoty.jpg" alt=""></div>
-                                                <div class="comment-right">
-                                                    <div class="comment-info">
-                                                        <strong class="dark-color pull-left name">Smatha Hughes</strong> <div class="date-comment grey-color pull-right">23 minutes ago</div>
-                                                    </div>
-                                                    <p>Tristique Aenean Ultricies Amet.</p>
-                                                    <a class="c-reply" href="#">Reply</a>
+                                            <div class="comment-right">
+                                                <div class="comment-info">
+                                                    <strong class="dark-color pull-left name">@comment.User.UserName</strong>
                                                 </div>
-                                            </li>
-                                            <li>
-                                                <div class="user-image"><img class="img-responsive" src="https://res.cloudinary.com/dtwmfo4fl/image/upload/v1688368768/4_ntnoty.jpg" alt=""></div>
-                                                <div class="comment-right">
-                                                    <div class="comment-info">
-                                                        <strong class="dark-color pull-left name">James Cemeron</strong> <div class="date-comment grey-color pull-right">53 minutes ago</div>
-                                                    </div>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.</p>
-                                                    <a class="c-reply" href="#">Reply</a>
+                                                <p>@comment.Content</p>
+                                                <a class="c-reply reply-link" onclick="toggleReplyForm()" data-form-id="replyForm-@comment.commentId">Reply</a>
+                                            </div>
+                                            @if (comment.Answers.Any())
+                                            {
+                                                <ul class="children">
+                                                    @foreach (var answer in comment.Answers)
+                                                    {
+                                                        <li>
+                                                            <div class="user-image">
+                                                                <img class="img-responsive" src="https://res.cloudinary.com/dtwmfo4fl/image/upload/v1688368768/4_ntnoty.jpg" alt="">
+                                                            </div>
+                                                            <div class="comment-right">
+                                                                <div class="comment-info">
+                                                                    <strong class="dark-color pull-left name">@answer.User.UserName</strong>
+                                                                </div>
+                                                                <p>@answer.content</p>
+                                                            </div>
+                                                            
+                                                        </li>
+                                                    }
+                                                </ul>
+                                                
+                                            }
+                                        </li>
+                                        <ul id="replyForm-@comment.commentId" class="children mt-2 mb-2" style="display: none;">
+                                            <form method="post" action="/Comment/AddAnswer" class="form-inline">
+                                                @Html.AntiForgeryToken()
+
+                                                <div class="form-group">
+                                                    <input type="hidden" name="commentId" value="@comment.commentId" />
+                                                    <input type="hidden" name="blogId" value="@Model.Blogid" />
+                                                    <input type="text" name="content" placeholder="Nhập phản hồi của bạn" class="form-control" required />
                                                 </div>
-                                            </li>
+
+                                                <button type="submit" class="btn btn-primary mt-2">Gửi</button>
+                                            </form>
                                         </ul>
-                                    </li>
-                                    <li>
-                                        <div class="user-image"><img class="img-responsive" src="https://res.cloudinary.com/dtwmfo4fl/image/upload/v1688368768/4_ntnoty.jpg" alt=""></div>
-                                        <div class="comment-right">
-                                            <div class="comment-info">
-                                                <strong class="dark-color pull-left name">Betty Perterson</strong> <div class="date-comment grey-color pull-right">19 hours ago</div>
-                                            </div>
-                                            <p>Dolor Condimentum Lorem Vestibulum Sollicitudin.</p>
-                                            <a class="c-reply" href="#">Reply</a>
-                                        </div>
-                                    </li>
+
+                                    }
+                                    <div class="mt-2 mb-2">
+                                    <form method="post" action="/Comment/AddComment">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="blogId" value="@Model.Blogid" />
+                                        <input type="text" name="content" placeholder="Nhập bình luận của bạn" class="form-control form-control-lg" required>
+                                        <button type="submit" class="btn btn-primary mt-2">Gửi</button>
+                                    </form>
+                                    </div>
                                 </ul>
+
                             </div>
                         </div>
                     </div>
@@ -254,3 +269,30 @@
     </div>
 </section>
 
+<script>
+    function toggleReplyForm(formId) {
+        var replyForm = document.getElementById(formId);
+        if (replyForm.style.display === "none") {
+            replyForm.style.display = "block";
+        } else {
+            replyForm.style.display = "none";
+        }
+    }
+
+    var replyLinks = document.getElementsByClassName("reply-link");
+    for (var i = 0; i < replyLinks.length; i++) {
+        replyLinks[i].addEventListener("click", function (e) {
+            e.preventDefault();
+            var formId = this.getAttribute("data-form-id");
+            toggleReplyForm(formId);
+        });
+    }
+
+
+
+
+
+
+
+
+</script>

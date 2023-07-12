@@ -58,6 +58,12 @@ namespace Project.Controllers
                 var blog = _context.Blogs
                .Include(b => b.Products)
                .Include(b => b.ImageBlogs)
+               .Include(c => c.Comment)
+                .ThenInclude(c => c.User)
+               .Include(c => c.Comment)
+                .ThenInclude(d => d.Answers)
+                .ThenInclude(c => c.User)
+
                .FirstOrDefault(b => b.Blogid == blogId);
                 return View(blog);
             }

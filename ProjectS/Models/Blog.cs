@@ -11,5 +11,7 @@
         public bool isCollection { get; set; }
         public virtual List<ImageBlog> ImageBlogs { get; set; } = null!;
         public virtual List<Product> Products { get; set; } = null!;
+        public virtual List<Comment> Comment { get; set; }=null!;
+
     }
 }

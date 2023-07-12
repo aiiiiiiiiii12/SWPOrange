@@ -29,7 +29,8 @@ namespace Project.Data
 		public virtual DbSet<Cart> Carts { get; set; } = null!;
 		public virtual DbSet<CartItem> CartItems { get; set; } = null!;
 		public virtual DbSet<WishList> WishList { get; set; } = null!;
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public virtual DbSet<Comment> Comment { get; set; } = null!;
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			base.OnConfiguring(optionsBuilder);
 		}
@@ -50,7 +51,20 @@ namespace Project.Data
             modelBuilder.Entity<Comment>(entity =>
             {
                 entity.HasKey(s => s.commentId);
-              
+
+                entity.HasOne(d => d.Blog)
+					.WithMany(c => c.Comment)
+                    .HasForeignKey(d => d.Blogid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__bilaB5");
+                
+				entity.HasOne(c => c.User)
+				.WithMany()
+				.HasForeignKey(c => c.UserId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+
+
 
             });
 
@@ -64,6 +78,12 @@ namespace Project.Data
                     .HasForeignKey(d => d.commentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__bills__paB5");
+
+                entity.HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             });
 
 
