@@ -71,7 +71,6 @@ namespace Project.Controllers
 
         public IActionResult ViewBlog()
         {
-            LoadRoleUser();
             List<Blog> blog = _context.Blogs.ToList();
 
 
@@ -80,7 +79,6 @@ namespace Project.Controllers
 
         public IActionResult ChangeStatus(int id)
         {
-            LoadRoleUser();
             var blog = _context.Blogs.FirstOrDefault(b => b.Blogid == id);
 
             if (blog != null)
@@ -94,7 +92,6 @@ namespace Project.Controllers
 
         public IActionResult Delete(int id)
         {
-            LoadRoleUser();
             var blog = _context.Blogs.FirstOrDefault(b => b.Blogid == id);
 
             if (blog != null)
@@ -108,7 +105,6 @@ namespace Project.Controllers
 
         public IActionResult ViewDetail(int id)
         {
-            LoadRoleUser();
             Blog blog = _context.Blogs.Include(b => b.ImageBlogs)
                                       .Include(b => b.Products)
                                       .FirstOrDefault(b => b.Blogid == id);
@@ -117,14 +113,12 @@ namespace Project.Controllers
 
         public IActionResult CreateBlog()
         {
-            LoadRoleUser();
             return View();
         }
 
         [HttpPost]
         public IActionResult CreateBlog(Blog blog)
         {
-            LoadRoleUser();
             if (blog.content == null || blog.content2 == null || blog.name == null || blog.DateUp == null)
             {
                 TempData["ErrorMessage"] = "Please enter all information!";
@@ -142,7 +136,6 @@ namespace Project.Controllers
 
         public IActionResult CreateImage(int id)
         {
-            LoadRoleUser();
 
             var blog = _context.Blogs.Include(b => b.ImageBlogs).FirstOrDefault(b => b.Blogid == id);
 
@@ -166,7 +159,6 @@ namespace Project.Controllers
 
         public IActionResult Update(int id)
         {
-            LoadRoleUser();
             var blog = _context.Blogs.FirstOrDefault(b => b.Blogid == id);
 
             if (blog != null)
@@ -182,7 +174,6 @@ namespace Project.Controllers
         [HttpPost]
         public IActionResult Update(Blog updatedBlog)
         {
-            LoadRoleUser();
             var blog = _context.Blogs.FirstOrDefault(b => b.Blogid == updatedBlog.Blogid);
 
             if (blog != null)
@@ -202,7 +193,6 @@ namespace Project.Controllers
 
         public IActionResult UpdateImage(int id)
         {
-            LoadRoleUser();
             List<ImageBlog> img = _context.ImageBlogs
                 .Where(image => image.BlogId == id)
                 .ToList();
@@ -231,7 +221,6 @@ namespace Project.Controllers
         {
             if (FormId == ImageId)
             {
-                LoadRoleUser();
 
                 var newImageUrl = ImageUrl;
 
@@ -266,46 +255,8 @@ namespace Project.Controllers
 
 
 
-        private void LoadRoleUser()
-        {
-            var user = HttpContext.User;
-
-            if (user.Identity.IsAuthenticated)
-            {
-                if (user.IsInRole("Admin"))
-                {
-                    ViewBag.ShowAdminButton = true;
-                }
-                else
-                {
-                    ViewBag.ShowAdminButton = false;
-                }
-
-                if (user.IsInRole("Marketing"))
-                {
-                    ViewBag.ShowMarketingButton = true;
-                }
-                else
-                {
-                    ViewBag.ShowMarketingButton = false;
-                }
-
-                if (user.IsInRole("Seller"))
-                {
-                    ViewBag.ShowSellerButton = true;
-                }
-                else
-                {
-                    ViewBag.ShowSellerButton = false;
-                }
-            }
-            else
-            {
-                ViewBag.ShowAdminButton = false;
-                ViewBag.ShowMarketingButton = false;
-                ViewBag.ShowSellerButton = false;
-            }
-        }
 
     }
+
 }
+

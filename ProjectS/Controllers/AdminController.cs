@@ -9,11 +9,11 @@ namespace Project.Controllers
 {
     public class AdminController : Controller
     {
-		private readonly ShopContext _shopContext;
+        private readonly ShopContext _shopContext;
         private readonly ICloudinaryService _cloudinaryService;
         public AdminController(ShopContext shopContext, ICloudinaryService temp)
-		{
-			_shopContext = shopContext;
+        {
+            _shopContext = shopContext;
             _cloudinaryService = temp;
         }
         public IActionResult Index()
@@ -71,38 +71,37 @@ namespace Project.Controllers
         }
 
         public IActionResult cfFeedback()
-		{
-			var feedbacks = _shopContext.Feedbacks.ToList();
+        {
+            var feedbacks = _shopContext.Feedbacks.ToList();
 
-			return View(feedbacks);
-		}
+            return View(feedbacks);
+        }
 
-		public IActionResult confirmFeedback(int feedbackId)
-		{
-			var feedback = _shopContext.Feedbacks.FirstOrDefault(f => f.FeedbackId == feedbackId);
-			if (feedback != null)
-			{
-				feedback.FeedbackStatus = "1";
-				_shopContext.SaveChanges();
-			}
+        public IActionResult confirmFeedback(int feedbackId)
+        {
+            var feedback = _shopContext.Feedbacks.FirstOrDefault(f => f.FeedbackId == feedbackId);
+            if (feedback != null)
+            {
+                feedback.FeedbackStatus = "1";
+                _shopContext.SaveChanges();
+            }
 
-			return RedirectToAction("cfFeedback", "admin");
-		}
-		public IActionResult deleteFb(int feedbackId)
-		{
-			var feedback = _shopContext.Feedbacks.FirstOrDefault(f => f.FeedbackId == feedbackId);
-			if (feedback != null)
-			{
-				_shopContext.Feedbacks.Remove(feedback);
-				_shopContext.SaveChanges();
-			}
-			return RedirectToAction("cfFeedback", "admin");
-		}
+            return RedirectToAction("cfFeedback", "admin");
+        }
+        public IActionResult deleteFb(int feedbackId)
+        {
+            var feedback = _shopContext.Feedbacks.FirstOrDefault(f => f.FeedbackId == feedbackId);
+            if (feedback != null)
+            {
+                _shopContext.Feedbacks.Remove(feedback);
+                _shopContext.SaveChanges();
+            }
+            return RedirectToAction("cfFeedback", "admin");
+        }
 
         //display product list
         public IActionResult DashProduct()
         {
-            LoadRoleUser();
             List<Product> products = _shopContext.Products.ToList();
             return View(products);
         }
@@ -111,7 +110,6 @@ namespace Project.Controllers
         //Delete product
         public IActionResult delProd(string productId)
         {
-            LoadRoleUser();
 
             var product = _shopContext.Products.FirstOrDefault(p => p.ProductId == Int32.Parse(productId));
             if (product != null)
@@ -127,7 +125,6 @@ namespace Project.Controllers
         //change product's Home Status
         public IActionResult changeHomeStatus(string pid)
         {
-            LoadRoleUser();
 
             var product = _shopContext.Products.FirstOrDefault(p => p.ProductId == Int32.Parse(pid));
             if (product != null)
@@ -155,7 +152,6 @@ namespace Project.Controllers
         //create product
         public IActionResult CreateProduct()
         {
-            LoadRoleUser();
 
             List<SubCategory> subcate = _shopContext.SubCategory.ToList();
 
@@ -165,7 +161,6 @@ namespace Project.Controllers
         [HttpPost]
         public IActionResult CreateProduct(IFormFile ImageUrl, Product product)
         {
-            LoadRoleUser();
 
             var imageURL = _cloudinaryService.UploadImage(ImageUrl, "MainImageProduct");
 
@@ -203,7 +198,6 @@ namespace Project.Controllers
         [HttpPost]
         public IActionResult UpdateProduct(IFormFile ImageUrl, Product updateProd)
         {
-            LoadRoleUser();
             Product product = _shopContext.Products.FirstOrDefault(x => x.ProductId == updateProd.ProductId);
 
             if (product != null)
@@ -238,14 +232,14 @@ namespace Project.Controllers
         //Detail Product
         public IActionResult ViewDetailProd(int productId)
         {
-            Product product = _shopContext.Products.FirstOrDefault(x =>x.ProductId == productId);
+            Product product = _shopContext.Products.FirstOrDefault(x => x.ProductId == productId);
             if (product != null)
             {
                 List<ProductDetails> pr = _shopContext.productdetails.Where(x => x.productId == productId).ToList();
                 ViewBag.ProductDetails = pr;
                 List<ImageProduct> imgProd = _shopContext.ImageProducts.Where(x => x.ProductId == productId).ToList();
                 ViewBag.ImageProducts = imgProd;
-			}
+            }
             return View(product);
         }
 
@@ -263,14 +257,13 @@ namespace Project.Controllers
                     }
                 }
             }
-            
+
             return true;
         }
 
         [HttpPost]
         public IActionResult CreateProductDetail(ProductDetails details)
         {
-            LoadRoleUser();
             Boolean test = checkDetailExist(details);
             string mess;
             if (test)
@@ -290,7 +283,7 @@ namespace Project.Controllers
         //delete detail product
         public IActionResult DelDetailProduct(int productDetailId)
         {
-            var detailProd =_shopContext.productdetails.FirstOrDefault(x => x.productDetailId == productDetailId);
+            var detailProd = _shopContext.productdetails.FirstOrDefault(x => x.productDetailId == productDetailId);
             int prodId = detailProd.productId;
             _shopContext.Remove(detailProd);
             _shopContext.SaveChanges();
@@ -302,12 +295,12 @@ namespace Project.Controllers
         [HttpPost]
         public IActionResult CreateImageProduct(IFormFile ImageUrl, ImageProduct imageProduct)
         {
-            LoadRoleUser();
+
 
             //return Redirect($"ViewDetailProd?productId={imageProduct.ProductId}");
 
 
-            var imageURL = _cloudinaryService.UploadImage(ImageUrl,"ImageProduct");
+            var imageURL = _cloudinaryService.UploadImage(ImageUrl, "ImageProduct");
 
             imageProduct.ImageURL = imageURL;
             _shopContext.Add(imageProduct);
@@ -328,46 +321,7 @@ namespace Project.Controllers
             return Redirect($"ViewDetailProd?productId={prodId}");
         }
 
-        private void LoadRoleUser()
-        {
-            var user = HttpContext.User;
 
-            if (user.Identity.IsAuthenticated)
-            {
-                if (user.IsInRole("Admin"))
-                {
-                    ViewBag.ShowAdminButton = true;
-                }
-                else
-                {
-                    ViewBag.ShowAdminButton = false;
-                }
-
-                if (user.IsInRole("Marketing"))
-                {
-                    ViewBag.ShowMarketingButton = true;
-                }
-                else
-                {
-                    ViewBag.ShowMarketingButton = false;
-                }
-
-                if (user.IsInRole("Seller"))
-                {
-                    ViewBag.ShowSellerButton = true;
-                }
-                else
-                {
-                    ViewBag.ShowSellerButton = false;
-                }
-            }
-            else
-            {
-                ViewBag.ShowAdminButton = false;
-                ViewBag.ShowMarketingButton = false;
-                ViewBag.ShowSellerButton = false;
-            }
-        }
 
     }
 }

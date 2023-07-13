@@ -13,41 +13,12 @@
 
     var user = SignInManager.UserManager.GetUserAsync(User).Result;
 
-    if (User.Identity.IsAuthenticated)
-    {
-        if (User.IsInRole("Admin"))
-        {
-            ViewBag.ShowAdminButton = true;
-        }
-        else
-        {
-            ViewBag.ShowAdminButton = false;
-        }
-
-        if (User.IsInRole("Marketing"))
-        {
-            ViewBag.ShowMarketingButton = true;
-        }
-        else
-        {
-            ViewBag.ShowMarketingButton = false;
-        }
-
-        if (User.IsInRole("Seller"))
-        {
-            ViewBag.ShowSellerButton = true;
-        }
-        else
-        {
-            ViewBag.ShowSellerButton = false;
-        }
-    }
-    else
-    {
-        ViewBag.ShowAdminButton = false;
-        ViewBag.ShowMarketingButton = false;
-        ViewBag.ShowSellerButton = false;
-    }
+}
+@{
+    var users = Context.User;
+    var isAdmin = users.Identity.IsAuthenticated && users.IsInRole("Admin");
+    var isMarketing = users.Identity.IsAuthenticated && users.IsInRole("Marketing");
+    var isSeller = users.Identity.IsAuthenticated && users.IsInRole("Seller");
 }
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
@@ -211,7 +182,7 @@
                                                         Đơn hàng
                                                     </a>
                                                 </li>
-                                                @if (ViewBag.ShowAdminButton != null && ViewBag.ShowAdminButton)
+                                                @if (isAdmin)
                                                 {
                                                     <li style="padding-left: 0px" class="nav-item">
                                                         <a class="dropdown-item" href="/admin/index">
@@ -220,7 +191,7 @@
                                                     </li>
                                                 }
 
-                                                @if (ViewBag.ShowMarketingButton != null && ViewBag.ShowMarketingButton)
+                                                @if (isMarketing)
                                                 {
                                                     <li style="padding-left: 0px" class="nav-item">
                                                         <a class="dropdown-item" href="/Admin/Index">
@@ -229,7 +200,7 @@
                                                     </li>
                                                 }
 
-                                                @if (ViewBag.ShowSellerButton != null && ViewBag.ShowSellerButton)
+                                                @if (isSeller)
                                                 {
                                                     <li style="padding-left: 0px" class="nav-item">
                                                         <a class="dropdown-item" href="/Admin/Index">
@@ -331,19 +302,17 @@
                             <div class="newsletter__form">
                                 <div class="input__box">
                                     <div id="mc_embed_signup">
-                                        <form action="http://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-                                            <div id="mc_embed_signup_scroll" class="htc__news__inner">
-                                                <div class="news__input">
-                                                    <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email Address" required>
-                                                </div>
-                                                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                                                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef" tabindex="-1" value=""></div>
-                                                <div class="clearfix subscribe__btn">
-                                                    <input type="submit" value="Send" name="subscribe" id="mc-embedded-subscribe" class="bst__btn btn--white__color">
-
-                                                </div>
+                                        <div id="mc_embed_signup_scroll" class="htc__news__inner">
+                                            <div class="news__input">
+                                                <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email Address" required>
                                             </div>
-                                        </form>
+                                            <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                                            <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef" tabindex="-1" value=""></div>
+                                            <div class="clearfix subscribe__btn">
+                                                <input type="submit" value="Send" name="subscribe" id="mc-embedded-subscribe" class="bst__btn btn--white__color">
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -365,10 +334,10 @@
                         <div class="ft__widget">
                             <h2 class="ft__title">Follow Us</h2>
                             <ul class="social__icon">
-                                <li><a href="https://twitter.com/devitemsllc" target="_blank"><i class="zmdi zmdi-twitter"></i></a></li>
-                                <li><a href="https://www.instagram.com/devitems/" target="_blank"><i class="zmdi zmdi-instagram"></i></a></li>
-                                <li><a href="https://www.facebook.com/devitems/?ref=bookmarks" target="_blank"><i class="zmdi zmdi-facebook"></i></a></li>
-                                <li><a href="https://plus.google.com/" target="_blank"><i class="zmdi zmdi-google-plus"></i></a></li>
+                                <li><a href="" target="_blank"><i class="zmdi zmdi-twitter"></i></a></li>
+                                <li><a href="" target="_blank"><i class="zmdi zmdi-instagram"></i></a></li>
+                                <li><a href="" target="_blank"><i class="zmdi zmdi-facebook"></i></a></li>
+                                <li><a href="" target="_blank"><i class="zmdi zmdi-google-plus"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -406,35 +375,4 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

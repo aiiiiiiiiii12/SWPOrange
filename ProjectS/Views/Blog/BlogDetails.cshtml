@@ -15,8 +15,10 @@
 <!-- blogcss -->
 <link rel="stylesheet" href="~/blogcss/css/style.css">
 <!-- end blogcss -->
-
-
+@{
+    var users = Context.User;
+    var isAdmin = users.Identity.IsAuthenticated && users.IsInRole("Admin");
+}
 
 <section class="htc__product__area shop__page ptb--130 bg__white">
 
@@ -208,7 +210,12 @@
                                                     <strong class="dark-color pull-left name">@comment.User.UserName</strong>
                                                 </div>
                                                 <p>@comment.Content</p>
-                                                <a class="c-reply reply-link" onclick="toggleReplyForm()" data-form-id="replyForm-@comment.commentId">Reply</a>
+                                                <a class="c-reply reply-link cursor-pointer" onclick="toggleReplyForm()" data-form-id="replyForm-@comment.commentId" href="#">Reply</a>
+                                                @if (isAdmin)
+                                                {
+                                                    <br />
+                                                    <a class="c-reply" href="/comment/deleteComment?commentId=@comment.commentId&blogId=@Model.Blogid">Delete</a>
+                                                }
                                             </div>
                                             @if (comment.Answers.Any())
                                             {
@@ -224,12 +231,17 @@
                                                                     <strong class="dark-color pull-left name">@answer.User.UserName</strong>
                                                                 </div>
                                                                 <p>@answer.content</p>
+                                                                @if (isAdmin)
+                                                                {
+                                                                    <br />
+                                                                    <a class="c-reply" href="/comment/deleteAnswer?answerId=@answer.answerId&blogId=@Model.Blogid">Delete</a>
+                                                                }
                                                             </div>
-                                                            
+
                                                         </li>
                                                     }
                                                 </ul>
-                                                
+
                                             }
                                         </li>
                                         <ul id="replyForm-@comment.commentId" class="children mt-2 mb-2" style="display: none;">
@@ -248,12 +260,12 @@
 
                                     }
                                     <div class="mt-2 mb-2">
-                                    <form method="post" action="/Comment/AddComment">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="blogId" value="@Model.Blogid" />
-                                        <input type="text" name="content" placeholder="Nhập bình luận của bạn" class="form-control form-control-lg" required>
-                                        <button type="submit" class="btn btn-primary mt-2">Gửi</button>
-                                    </form>
+                                        <form method="post" action="/Comment/AddComment">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="blogId" value="@Model.Blogid" />
+                                            <input type="text" name="content" placeholder="Nhập bình luận của bạn" class="form-control form-control-lg" required>
+                                            <button type="submit" class="btn btn-primary mt-2">Gửi</button>
+                                        </form>
                                     </div>
                                 </ul>
 
