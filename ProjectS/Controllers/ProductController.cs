@@ -64,7 +64,7 @@ namespace Project.Controllers
 
         public IActionResult DetailProduct(int id)
         {
-            var product = _shopContext.Products.Where(p => p.ProductId == id).FirstOrDefault();
+            var product = _shopContext.Products.Include(p => p.Feedbacks).Where(p => p.ProductId == id).FirstOrDefault();
 
 
 

@@ -8,6 +8,8 @@
     var LColor = new List<string>();
 
 }
+@using Project.Data
+@inject ShopContext _shopContext
 <div class="ht__bradcaump__area" style="background: rgba(0, 0, 0, 0) url(/images/bg/2.jpg) no-repeat scroll center center / cover ;">
     <div class="ht__bradcaump__wrap">
         <div class="container">
@@ -228,6 +230,23 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <h1 style="margin-top: 70px">Feedback đây đọc code rồi xử lí front end</h1>
+    <div class="row">
+        @foreach (var l in Model.Feedbacks)
+        {
+            var user = _shopContext.Users.Find(l.UserId);
+            if(user != null)
+            {
+                var UserName = user.Email.Substring(0, user.Email.IndexOf("@"));
+
+                <h1>tên: @UserName</h1>
+
+                <h1>feedback: @l.FeedbackAnswer</h1>
+            }
+        }
+
     </div>
 </section>
 
