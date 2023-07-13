@@ -231,24 +231,65 @@
             </div>
         </div>
     </div>
-
-    <h1 style="margin-top: 70px">Feedback đây đọc code rồi xử lí front end</h1>
-    <div class="row">
-        @foreach (var l in Model.Feedbacks)
-        {
-            var user = _shopContext.Users.Find(l.UserId);
-            if(user != null)
-            {
-                var UserName = user.Email.Substring(0, user.Email.IndexOf("@"));
-
-                <h1>tên: @UserName</h1>
-
-                <h1>feedback: @l.FeedbackAnswer</h1>
-            }
-        }
-
-    </div>
 </section>
+
+<section class="htc__product__details__tab bg__white pb--120">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <ul class="nav product__deatils__tab mb--60" role="tablist">
+                    <li role="presentation" class="active">
+                        <a class="active" href="#reviews" role="tab" data-bs-toggle="tab">FeedBack</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product__details__tab__content" style="margin-left: 70px">
+                    <!-- Start Single Content -->
+                    @foreach (var l in Model.Feedbacks)
+                    {
+                        var user = _shopContext.Users.Find(l.UserId);
+                        if (user != null)
+                        {
+                            var UserName = user.Email.Substring(0, user.Email.IndexOf("@"));
+
+                            <div class="review__address__inner">
+                                <!-- Start Single Review -->
+                                <div class="pro__review ans">
+                                    <div class="review__thumb">
+                                        <img src="~/images/avatar/User-avatar.svg.png" alt="review images" style="height: 70px; width: 70px;border-radius:100%; border: 2px solid">
+                                    </div>
+                                    <div class="review__details">
+
+                                        <div class="review__info">
+
+                                            <h4>@UserName</h4>
+
+
+                                        </div>
+                                        <div class="review__date">
+                                            <span>@l.FeedbackDate</span>
+                                        </div>
+                                        <p>@l.FeedbackAnswer</p>
+                                        <br />
+                                    </div>
+                                </div>
+                                <!-- End Single Review -->
+
+                            </div>
+                        }
+                    }
+                </div>
+                <!-- End Single Content -->
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
 
 @{
     var danhSachDuLieu = Model.ProductDetails;
