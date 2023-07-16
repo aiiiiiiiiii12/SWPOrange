@@ -121,7 +121,7 @@
                                                             <tr>
                                                                 <td class="product-thumbnail"><a href="#"><img src="@product.ImageMain" alt="product img" /></a></td>
                                                                 <td style="width: 12vw" class="product-name"><a asp-controller="Product" asp-action="DetailProduct" asp-route-id="@product.ProductId">@product.ProductName</a></td>
-                                                                <td style="width: 5vw" class="product-price"><span style="display:block; margin-left:40px; width: 25px; height: 25px; background-color: @l.color " class="amount"></span></td>
+                                                                <td style="width: 5vw" class="product-price"><span style="display:block; margin-left:25px; width: 25px; height: 25px; background-color: @l.color " class="amount"></span></td>
                                                                 <td style="width: 12vw" class="product-price"><span class="amount">@l.size</span></td>
                                                                 <td style="width: 12vw" class="product-quantity">
                                                                     @l.quantity
@@ -158,10 +158,10 @@
                                                             Product product = _shopContext.Products.Find(l.ProductId);
                                                             <tr>
                                                                 <td class="product-thumbnail"><a href="#"><img src="@product.ImageMain" alt="product img" /></a></td>
-                                                                <td class="product-name"><a asp-controller="Product" asp-action="DetailProduct" asp-route-id="@product.ProductId">@product.ProductName</a></td>
-                                                                <td class="product-price"><span style="display:block; margin-left:40px; width: 25px; height: 25px; background-color: @l.color " class="amount"></span></td>
-                                                                <td class="product-price"><span class="amount">@l.size</span></td>
-                                                                <td class="product-quantity">
+                                                                <td style="width: 12vw" class="product-name"><a asp-controller="Product" asp-action="DetailProduct" asp-route-id="@product.ProductId">@product.ProductName</a></td>
+                                                                <td style="width: 5vw" class="product-price"><span style="display:block;  margin-left:40px; width: 25px; height: 25px; background-color: @l.color " class="amount"></span></td>
+                                                                <td style="width: 12vw" class="product-price"><span class="amount">@l.size</span></td>
+                                                                <td style="width: 12vw" class="product-quantity">
                                                                     @l.quantity
                                                                 </td>
                                                             </tr>

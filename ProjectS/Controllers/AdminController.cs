@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using OfficeOpenXml;
 using PayPal.Api;
 using Project.Data;
 using Project.Models;
@@ -106,6 +107,50 @@ namespace Project.Controllers
             return View(products);
         }
 
+        [HttpPost]
+        //add produc from excel file
+        public IActionResult upExcelProduct(IFormFile fileExcel)
+        {
+
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            if (fileExcel != null && fileExcel.Length > 0)
+            {
+                using (var package = new ExcelPackage(fileExcel.OpenReadStream()))
+                {
+                    try
+                    {
+                        var worksheet = package.Workbook.Worksheets[0];
+
+
+                        int rowCount = worksheet.Dimension.Rows;
+                        for (int row = 2; row <= rowCount; row++) // Start from the second row (excluding the header)
+                        {
+                            var product = new Product();
+                            //name, description, category, date, discout,price image, avaiable, homestatus
+                            product.ProductName = worksheet.Cells[row, 1].Value.ToString(); // Read value from the Name column (column 2)
+                            product.ProductDescription = worksheet.Cells[row, 2].Value.ToString();
+                            product.SubCategoryID = int.Parse(worksheet.Cells[row, 3].Value.ToString());
+                            product.ImportDate = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd"));
+                            product.Discount = double.Parse(worksheet.Cells[row, 4].Value.ToString());
+                            product.ProductPrice = double.Parse(worksheet.Cells[row, 5].Value.ToString());
+                            product.ImageMain = worksheet.Cells[row, 6].Value.ToString();
+                            product.IsAvailble = false;
+                            product.HomeStatus = false;
+                            _shopContext.Products.Add(product);
+                            _shopContext.SaveChanges();
+                        }
+                        TempData["checkExcel"] = "add successfull";
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["checkExcel"] = "add failed";
+                        return Redirect("DashProduct");
+                    }
+
+                }
+            }
+            return Redirect("DashProduct");
+        }
 
         //Delete product
         public IActionResult delProd(string productId)

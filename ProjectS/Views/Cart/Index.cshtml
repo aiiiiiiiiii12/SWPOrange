@@ -54,7 +54,7 @@
                                             <tr>
                                                 <td class="product-thumbnail"><a href="#"><img src="@product.ImageMain" alt="product img" /></a></td>
                                                 <td class="product-name"><a asp-controller="Product" asp-action="DetailProduct" asp-route-id="@product.ProductId">@product.ProductName</a></td>
-                                                <td class="product-price"><span style="display:block; margin-left:40px; width: 25px; height: 25px; background-color: @l.color " class="amount"></span></td>
+                                                <td class="product-price"><span style="display:block; margin-left:44px; width: 25px; height: 25px; background-color: @l.color " class="amount"></span></td>
                                                 <td class="product-price"><span class="amount">@l.size</span></td>
                                                 <td class="product-quantity">
                                                     <h3>
@@ -66,7 +66,7 @@
                                                 <td class="product-subtotal">
                                                 @(
                                                     product.ProductPrice - product.Discount
-                                                    )
+                                                    ).000VND
                                                 </td>
                                                 <td class="product-subtotal">
                                                 @(
@@ -75,8 +75,7 @@
 
                                                 @{
                                                     total = total + (product.ProductPrice - product.Discount) * l.Quantity;
-                                                }
-
+                                                }.000VND
                                                 </td>
                                                 <td class="product-remove"><a asp-controller="Cart" asp-action="Index" asp-route-choice="remove" asp-route-id="@l.CartItemId">X</a></td>
                                             </tr>
@@ -87,14 +86,12 @@
                             <div class="row">
                                 <div class="col-md-8 col-sm-12">
                                     <div class="buttons-cart">
-                                        <input type="submit" value="Update Cart" />
                                         <a href="#">Continue Shopping</a>
                                     </div>
                                     <div class="coupon">
                                         <h3>Coupon</h3>
                                         <p>Enter your coupon code if you have one.</p>
                                         <input type="text" placeholder="Coupon code" />
-                                        <input type="submit" value="Apply Coupon" />
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-12 ">
@@ -104,7 +101,7 @@
                                             <tbody>
                                                 <tr class="cart-subtotal">
                                                     <th>Subtotal</th>
-                                                    <td><span class="amount">@total</span></td>
+                                                    <td><span class="amount">@(total).000vnd</span></td>
                                                 </tr>
                                                 <tr class="shipping">
                                                     <th>Shipping</th>
@@ -130,7 +127,7 @@
                                                 <tr class="order-total">
                                                     <th>Total</th>
                                                     <td>
-                                                        <strong><span class="amount">@total</span></strong>
+                                                        <strong><span class="amount">@(total).000VND</span></strong>
                                                     </td>
                                                 </tr>
                                             </tbody>

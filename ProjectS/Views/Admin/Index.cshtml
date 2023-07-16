@@ -4,34 +4,59 @@
 }
 @model SortedDictionary<int, double>
 
+<div class="container-fluid dashboard-content ">
 
-<div style="margin-left: 30px" class="row">
-    <div style=" padding-bottom: 30px; margin-right: 40px; background-color: white" class="col-md-7">
-        <canvas id="revenueChart" width="400" height="200"></canvas>
-        <div style=" margin-bottom: 3px; margin-top: 40px" class="row  d-flex justify-content-center align-items-center">
-            <p style="font-weight: 400; font-size: 20px">
+    <!-- pageheader  -->
 
-                DOANH THU TRONG NĂM
-            </p>
-        </div>
-        <div style="margin-bottom: 20px" class="row  d-flex justify-content-center align-items-center">
-            <p style=" font-size: 17px; color: #009688">   <i class="fas fa-dollar-sign"></i> @(ViewData["total"]).000VND</p>
-        </div>
-        <div class="row">
-            <div class="col-md-6 d-flex justify-content-center align-items-center">
-           
-                <p style="font-size: 17px; color: red">    <i class="fas fa-dollar-sign"></i>  TRONG THÁNG @(ViewData["totalMonth"]).000VND</p>
-            </div>
-            <div class="col-md-6 d-flex justify-content-center align-items-center">
-
-                <p style="font-size: 17px; color: red">   <i class="fas fa-dollar-sign"></i>  TRONG Ngày @(ViewData["totalDay"]).000VND</p>
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="page-header">
+                <h2 class="pageheader-title">Quản Lý  </h2>
+                <div class="page-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
+                            
+                        </ol>
+                    </nav>
+                </div>
             </div>
 
         </div>
     </div>
-    <div style=" padding-bottom: 30px; margin-left: 30px; background-color: white" class="col-md-4">
-        <canvas id="myChart"></canvas>
-    </div>
+
+    <main role="main">
+        <div style="margin-left: 30px" class="row">
+            <div style=" padding-bottom: 30px; margin-right: 40px; background-color: white" class="col-md-7">
+                <canvas id="revenueChart" width="400" height="200"></canvas>
+                <div style=" margin-bottom: 3px; margin-top: 40px" class="row  d-flex justify-content-center align-items-center">
+                    <p style="font-weight: 400; font-size: 20px">
+
+                        DOANH THU TRONG NĂM
+                    </p>
+                </div>
+                <div style="margin-bottom: 20px" class="row  d-flex justify-content-center align-items-center">
+                    <p style=" font-size: 17px; color: #009688">   <i class="fas fa-dollar-sign"></i> @(ViewData["total"]).000VND</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 d-flex justify-content-center align-items-center">
+
+                        <p style="font-size: 17px; color: red">    <i class="fas fa-dollar-sign"></i>  TRONG THÁNG @(ViewData["totalMonth"]).000VND</p>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-center align-items-center">
+
+                        <p style="font-size: 17px; color: red">   <i class="fas fa-dollar-sign"></i>  TRONG Ngày @(ViewData["totalDay"]).000VND</p>
+                    </div>
+
+                </div>
+            </div>
+            <div style=" padding-top: 110px; padding-bottom: 30px; margin-left: 30px; background-color: white" class="col-md-4">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+
+    </main>
+    <!-- end pageheader  -->
 </div>
 
 
@@ -90,8 +115,8 @@
 
     var colors = ['rgb(75, 192, 192)', 'rgb(255, 99, 132)', 'rgb(54, 162, 235)'];
     var productData = [
-        { name: 'Sản phẩm A', sales: 100 },
-        { name: 'Sản phẩm B', sales: 75 },
+        { name: 'Áo thun A', sales: 100 },
+        { name: 'Quần jean mới', sales: 75 },
         { name: 'Sản phẩm C', sales: 50 },
     ];
 
