@@ -28,7 +28,7 @@
     <main role="main">
         <div class="container" style="background: white;border-radius:5px">
             <br />
-            @if (string.IsNullOrEmpty(ViewBag.OutOfStockMessage))
+            @if (!string.IsNullOrEmpty(ViewBag.OutOfStockMessage))
             {
                 <div class="alert alert-warning">
                     @ViewBag.OutOfStockMessage

@@ -316,7 +316,6 @@ namespace Project.Controllers
             }
 
             // Xử lý khi không có URL phê duyệt.
-            // Ví dụ: Hiển thị thông báo lỗi hoặc chuyển hướng người dùng đến trang lỗi.
             return View("FailureView");
         }
 

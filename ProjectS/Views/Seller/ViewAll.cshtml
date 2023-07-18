@@ -72,9 +72,9 @@
 									<tr>
 										<td>
 											<div class="d-flex align-items-center">
-												<div>
+												@*<div>
 													<input class="form-check-input me-3" type="checkbox" value="" aria-label="...">
-												</div>
+												</div>*@
 												<div class="ms-2">
 													<h6 class="mb-0 font-14">@bill.BillId</h6>
 												</div>
@@ -109,13 +109,9 @@
 										</td>
 										<td>@bill.TotalPrice</td>
 										<td>@bill.PurchaseDate</td>
-											@*<td><a type="button" class="btn btn-primary btn-sm radius-30 px-4">@bill.ShippingAddress</a></td>*@
 										<td>@bill.ShippingAddress</td>
 
-											@*<div class="d-flex order-actions">
-								<a href="javascript:;" class=""><i class='bx bxs-edit'></i></a>
-								<a href="javascript:;" class="ms-3"><i class='bx bxs-trash'></i></a>
-								</div>*@
+											
 										<td><a href="/Seller/DetailBill/?billId=@bill.BillId" type="button" class="btn btn-primary btn-sm radius-30 px-4">View Detail</a></td>
 										<td>
 											<input type="submit" value="Confirm" />
