@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_DashLayout.cshtml";
 }
-@model Product 
+@model Product
 @{
     List<ProductDetails> pr = ViewBag.ProductDetails;
     List<ImageProduct> imgProd = ViewBag.ImageProducts;
@@ -91,10 +91,10 @@
                                                             <td>@a.size</td>
                                                             <td>@a.quantity</td>
                                                             <td>
-                                                                <label style=" border-width: 7px;  background-color: @a.color; height: 20px; width: 20px" class="btn" for="color-@a.color"></label>
+                                                                <label style=" border-width: 7px;  background-color: @a.color; height: 30px; width: 30px" for="color-@a.color"></label>
                                                             </td>
                                                             <td>
-                                                                <a href="/admin/DelDetailProduct?productDetailId=@a.productDetailId" class="btn btn-danger" onclick="check(event)">
+                                                                <a href="/admin/DelDetailProduct?productDetailId=@a.productDetailId" class="btn btn-danger btn-sm radius-30 px-4" onclick="check(event)">
                                                                     <i class="icon-close"></i>
                                                                 </a>
                                                             </td>
@@ -107,7 +107,7 @@
                                                             <input type="hidden" name="productId" value="@Model.ProductId">
                                                         <th scope="row">#</th>
                                                         <td>
-                                                            <select name="size" for="size">
+                                                            <select class="form-control ps-5" name="size" for="size">
                                                                 <option value="XS">XS</option>
                                                                 <option value="S">S</option>
                                                                 <option value="M">M</option>
@@ -116,9 +116,9 @@
                                                                 <option value="XXL">XXL</option>
                                                             </select>
                                                         </td>
-                                                        <td><input type="number" name="quantity" min="0" max="999" step="1" required></td>
-                                                        <td><input type="color" name="color" id="color"></td>
-                                                        <td> <input type="submit" value="add" class="btn btn-success"></td>
+                                                        <td><input class="form-control ps-5 radius-30" type="number" name="quantity" min="0" max="999" step="1" required></td>
+                                                        <td><input type="color" name="color" id="color" style="-webkit-appearance: none; -moz-appearance:none; appearance: none; width:40px; height:40px; border:none; cursor:none;"></td>
+                                                        <td> <input type="submit" value="add" class="btn btn-success btn-sm radius-30 px-4"></td>
                                                         </form>
 
                                                     </tr>
@@ -148,7 +148,7 @@
                                                             <th scope="row">@a.ImageProductId</th>
                                                             <td><img src="@a.ImageURL" style="max-width: 50px"></td>
                                                             <td>
-                                                                <a href="/admin/DelImageProduct?ImageProductId=@a.ImageProductId" class="btn btn-danger" onclick="check(event)">
+                                                                <a href="/admin/DelImageProduct?ImageProductId=@a.ImageProductId" class="btn btn-danger btn-sm radius-30 px-4" onclick="check(event)">
                                                                     <i class="icon-close"></i>
                                                                 </a>
                                                             </td>
@@ -169,7 +169,7 @@
                                                                  height="150">
                                                         </td>
 
-                                                        <td> <input type="submit" value="add" class="btn btn-success"></td>
+                                                        <td> <input type="submit" value="add" class="btn btn-success btn-sm radius-30 px-4"></td>
 
                                                         </form>
 

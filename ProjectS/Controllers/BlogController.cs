@@ -251,6 +251,21 @@ namespace Project.Controllers
             return RedirectToAction("ViewBlog");
         }
 
+        public IActionResult searchBlogByName(string name)
+        {
+            List<Blog> blog = null;
+
+            if (name != null)
+            {
+                blog = _context.Blogs.Where(x => x.name.Contains(name)).ToList();
+            }
+            else
+
+                blog = _context.Blogs.ToList();
+
+            return View(blog);
+        }
+
 
 
 

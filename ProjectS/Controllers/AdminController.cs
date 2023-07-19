@@ -107,7 +107,22 @@ namespace Project.Controllers
             return View(products);
         }
 
-        [HttpPost]
+		//search product by name
+		public IActionResult searchProductByName(string name)
+		{
+			List<Product> products = null;
+
+			if (name != null)
+			{
+				products = _shopContext.Products.Where(x => x.ProductName.Contains(name)).ToList();
+			}
+			else
+
+				products = _shopContext.Products.ToList();
+
+			return View(products);
+		}
+		[HttpPost]
         //add produc from excel file
         public IActionResult upExcelProduct(IFormFile fileExcel)
         {
