@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Project.Controllers
             _logger = logger;
             _signInManager = s1;
         }
+
 
 
         public IActionResult Index(int id, bool gender, int mode)
@@ -121,53 +123,33 @@ namespace Project.Controllers
 
         public IActionResult AddWishList(int id, int choice)
         {
-            if (!_signInManager.IsSignedIn(User))
+            string? cookieValue = Request.Cookies["wish"];
+            if (cookieValue == null)
             {
-
-                string? cookieValue = Request.Cookies["wish"];
-                if (cookieValue == null)
+                var option = new CookieOptions()
                 {
-                    var option = new CookieOptions()
-                    {
-                        Expires = DateTime.Now.AddDays(90)
-                    };
-                    Response.Cookies.Append("wish", id + ",", option);
-                }
-                else
-                {
-                    var option = new CookieOptions()
-                    {
-                        Expires = DateTime.Now.AddDays(90)
-                    };
-                    Response.Cookies.Append("wish", cookieValue + id + ",", option);
-                }
+                    Expires = DateTime.Now.AddDays(90)
+                };
+                Response.Cookies.Append("wish", id + ",", option);
             }
             else
             {
-                var p = _shopContext.Products.Find(id);
 
-                if (p != null)
+                var option = new CookieOptions()
                 {
-                    var l = _shopContext.WishList.Where(p => p.UserId == _signInManager.UserManager.GetUserId(User) && p.ProductId == id).ToList();
-
-                    if (l.Count != 0)
-                    {
-                        _shopContext.WishList.Add(new WishList()
-                        {
-                            UserId = _signInManager.UserManager.GetUserId(User),
-                            ProductId = p.ProductId
-                        });
-                    }
-
-
-                    _shopContext.SaveChanges();
-                }
+                    Expires = DateTime.Now.AddDays(90)
+                };
+                Response.Cookies.Append("wish", cookieValue + id + ",", option);
             }
+
 
             if (choice == 1)
                 return Redirect("/Home/Index");
+            string CompleteUrl = Request.Headers["Referer"].ToString();
 
-            return Redirect("/Home/Index");
+            return Redirect(CompleteUrl);
+         
+
         }
 
 
@@ -184,7 +166,7 @@ namespace Project.Controllers
                     if (!string.IsNullOrEmpty(c))
                         wishList.Add(int.Parse(c));
                 }
-                wishList.Remove(id);
+                wishList.RemoveAll(item => item == id);
                 if (wishList.Count == 0)
                 {
                     Response.Cookies.Delete("wish");
@@ -205,24 +187,16 @@ namespace Project.Controllers
                 }
             }
 
-            var wish = _shopContext.WishList.Where(p => p.UserId == _signInManager.UserManager.GetUserId(User) && p.ProductId == id).ToList();
-            if (wish.Count > 0)
-            {
-                _shopContext.WishList.Remove(wish[0]);
-                _shopContext.SaveChanges();
-            }
 
             return Redirect("/Product/WishList");
+
+
+
         }
 
         public IActionResult WishList()
         {
             List<int> list = new List<int>();
-
-            if (_signInManager.IsSignedIn(User))
-            {
-                list.AddRange(_shopContext.WishList.Where(p => p.UserId == _signInManager.UserManager.GetUserId(User)).Select(p => p.ProductId).ToList());
-            }
 
 
             string? cookieValue = Request.Cookies["wish"];
@@ -237,5 +211,8 @@ namespace Project.Controllers
 
             return View(_shopContext.Products.Where(c => list.Contains(c.ProductId)).ToList());
         }
+
+
+
     }
 }

@@ -100,8 +100,6 @@
                                         <table>
                                             <tbody>
                                                 <tr class="cart-subtotal">
-                                                    <th>Subtotal</th>
-                                                    <td><span class="amount">@(total).000vnd</span></td>
                                                 </tr>
                                                 <tr class="shipping">
                                                     <th>Shipping</th>
@@ -110,13 +108,13 @@
                                                             <li>
                                                                 <input type="radio" id="ShippingMethod1" name="flexRadioShippingMethod" />
                                                                 <label for="ShippingMethod1">
-                                                                    Flat Rate: <span class="amount">0</span>
+                                                                    Giao hàng tiết kiệm
                                                                 </label>
                                                             </li>
                                                             <li>
                                                                 <input type="radio" id="ShippingMethod2" name="flexRadioShippingMethod" />
                                                                 <label for="ShippingMethod2">
-                                                                    Free Shipping
+                                                                    VNPost
                                                                 </label>
                                                             </li>
                                                             <li></li>
@@ -145,11 +143,24 @@
         }
         else
         {
-            <h1>Không có sản phẩm nào trong giỏ hàng của bạn.</h1>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5 mx-auto">
+                        <p style="height: 50px;" class="btn btn-danger">Không có sản phẩm nào trong giỏ hàng của bạn.</p>
+                    </div>
+                </div>
+            </div>
         }
     }
     else
     {
-        <h1>Không có sản phẩm nào trong giỏ hàng của bạn.</h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 mx-auto">
+                    <p class="btn btn-danger">Không có sản phẩm nào trong giỏ hàng của bạn.</p>
+                </div>
+            </div>
+        </div>
     }
 </div>

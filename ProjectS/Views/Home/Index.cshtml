@@ -87,18 +87,15 @@
                             <div class="product foo">
                                 <div class="product__inner">
                                     <div class="pro__thumb">
-                                        <a href="#">
+                                        <a href="/Product/DetailProduct?id=@item.ProductId">
                                             <img src="@item.ImageMain" alt="product images">
                                         </a>
                                     </div>
                                     <div class="product__hover__info">
                                         <ul class="product__action">
                                             <li><a asp-controller="Product" asp-action="DetailProduct" asp-route-id="@item.ProductId" title="Quick View" class="quick-view modal-view detail-link"><span class="ti-plus"></span></a></li>
-                                            <li><a title="Add TO Cart" asp-controller="Cart" asp-action="Index"><span class="ti-shopping-cart"></span></a></li>
+                                            <li> <a data-bs-toggle="tooltip" title="Add To Wishlist" class="add-to-cart" asp-route-id="@item.ProductId" asp-action="AddWishList" asp-controller="Product"><span class="ti-heart"></span></a></li>
                                         </ul>
-                                    </div>
-                                    <div class="add__to__wishlist">
-                                        <a data-bs-toggle="tooltip" title="Add To Wishlist" class="add-to-cart" asp-route-id="@item.ProductId" asp-action="AddWishList" asp-controller="Product"><span class="ti-heart"></span></a>
                                     </div>
                                 </div>
                                 <div class="product__details">

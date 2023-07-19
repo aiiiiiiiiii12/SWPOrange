@@ -1,5 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Project.Data
+@using Newtonsoft.Json;
+@using Project.Controllers
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject ShopContext _shopContext
 @{
     var listCate = _shopContext.Categories.ToList();
 
@@ -10,8 +15,54 @@
         e.Collection(c => c.SubCategories).Load();
     }
 
+    List<int> list = new List<int>();
+
+
+    string? cookieValue = Context.Request.Cookies["wish"];
+    if (cookieValue != null)
+    {
+        foreach (var c in cookieValue.Split(","))
+        {
+            if (!string.IsNullOrEmpty(c))
+                if (!list.Contains(int.Parse(c)))
+                    list.Add(int.Parse(c));
+        }
+    }
+
+    var count = list.Count;
 
     var user = SignInManager.UserManager.GetUserAsync(User).Result;
+
+
+
+    List<CartItem> cartItems = new List<CartItem>();
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        string userId = SignInManager.UserManager.GetUserId(User);
+        int cartId = (from c in _shopContext.Carts
+                      where c.UserId == userId
+                      select c.CartId).FirstOrDefault();
+        var temp = _shopContext.CartItems.Where(i => i.CartId == cartId);
+
+
+        if (temp != null)
+        {
+            cartItems = temp.ToList();
+        }
+
+    }
+
+    string? cookieValue2 = Context.Request.Cookies["cart"];
+    if (cookieValue2 != null)
+    {
+        List<CartItem> cartListFromCookie = JsonConvert.DeserializeObject<List<CartItem>>(cookieValue2);
+        cartItems.AddRange(cartListFromCookie);
+    }
+    int count2 = 0;
+    count2 = cartItems.Count();
+
+
 
 }
 @{
@@ -19,10 +70,9 @@
     var isAdmin = users.Identity.IsAuthenticated && users.IsInRole("Admin");
     var isMarketing = users.Identity.IsAuthenticated && users.IsInRole("Marketing");
     var isSeller = users.Identity.IsAuthenticated && users.IsInRole("Seller");
+
 }
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-@inject ShopContext _shopContext
+
 
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -113,49 +163,6 @@
                                     <li><a href="/Home/Contact">contact</a></li>
                                 </ul>
                             </nav>
-
-                            @*   <div class="mobile-menu clearfix d-block d-lg-none">
-                            <nav id="mobile_dropdown">
-                            <ul>
-                            <li>
-                            <a href="index.html">Home</a>
-                            </li>
-                            <li><a href="about.html">About</a></li>
-                            <li>
-                            <a href="blog.html">blog</a>
-
-                            </li>
-                            <li>
-                            <a href="shop.html">Shop</a>
-                            <ul>
-                            <li>
-                            <a href="shop.html">Shop Pages</a>
-                            <ul>
-                            <li><a href="shop.html">shop</a></li>
-                            <li><a href="shop-sidebar.html">shop sidebar</a></li>
-                            <li><a href="cart.html">cart</a></li>
-                            <li><a href="checkout.html">checkout</a></li>
-                            <li><a href="wishlist.html">wishlist</a></li>
-                            </ul>
-                            </li>
-                            <li>
-                            <a href="shop.html">Product Types</a>
-                            <ul>
-                            <li><a href="product-details.html">Simple Product</a></li>
-                            <li><a href="product-details.html">Variable Product</a></li>
-                            <li><a href="product-details.html">Grouped Product</a></li>
-                            <li><a href="product-details.html">Downloadable Product</a></li>
-                            <li><a href="product-details.html">Simple Product</a></li>
-                            </ul>
-                            </li>
-                            <!-- End Single Mega MEnu -->
-                            </ul>
-                            </li>
-
-                            <li><a href="contact.html">contact</a></li>
-                            </ul>
-                            </nav>
-                            </div>*@
                         </div>
                         <!-- End MAinmenu Ares -->
                         <div class="col-md-2 col-lg-2 col-6">
@@ -220,9 +227,50 @@
                                     </li>
 
                                 }
+                                @if (count > 0)
+                                {
+                                    <li class="">
+                                        <a asp-action="WishList" asp-controller="Product">
+                                            <span class="position-relative ti-heart">
+                                                <span style=" width: 18px; width: 19px;height: 19px;line-height: 19px; font-size: 11px; border-radius: 40%;color: white " class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle small-circle">
+                                                    @count
+                                                    <span class="visually-hidden">unread messages</span>
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class=""> <a asp-action="WishList" asp-controller="Product"> <span class="ti-heart"></span></a></li>
+                                }
 
-                                <li class=""> <a asp-action="WishList" asp-controller="Product"> <span class="ti-heart"></span></a></li>
-                                <li class=""> <a asp-action="Index" asp-controller="Cart"> <span class="ti-shopping-cart"></span></a></li>
+
+                                @if (count2 > 0)
+                                {
+
+                                    <li class="">
+                                        <a asp-action="Index" asp-controller="Cart">
+                                            <span class="position-relative ti-shopping-cart">
+                                                <span style=" width: 18px; width: 19px;height: 19px;line-height: 19px; font-size: 11px; border-radius: 40%;color: white " class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle small-circle">
+                                                    @count2
+                                                    <span class="visually-hidden">unread messages</span>
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="">
+                                        <a asp-action="Index" asp-controller="Cart">
+                                            <span class="position-relative ti-shopping-cart"></span>
+                                        </a>
+                                    </li>
+                                }
+
+
+
                                 @if (SignInManager.IsSignedIn(User))
                                 {
                                     <li class="nav-item">
@@ -289,7 +337,7 @@
                                 </a>
                             </div>
                             <div class="footer__details">
-                                <p>Get 10% discount with notified about the latest news and updates.</p>
+                                <p>Được giảm giá 10% khi được thông báo về những tin tức và cập nhật mới nhất</p>
                             </div>
                         </div>
                     </div>
@@ -308,8 +356,7 @@
                                             <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
                                             <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef" tabindex="-1" value=""></div>
                                             <div class="clearfix subscribe__btn">
-                                                <input type="submit" value="Send" name="subscribe" id="mc-embedded-subscribe" class="bst__btn btn--white__color">
-
+                                                <input type="submit" class="bst__btn btn--white__color">
                                             </div>
                                         </div>
                                     </div>
@@ -323,7 +370,7 @@
                         <div class="ft__widget contact__us">
                             <h2 class="ft__title">Contact Us</h2>
                             <div class="footer__inner">
-                                <p> 319 Clematis St. <br> Suite 100 WPB, FL 33401 </p>
+                                <p> 319 Cầu giấy <br>  </p>
                             </div>
                         </div>
                     </div>
@@ -333,10 +380,10 @@
                         <div class="ft__widget">
                             <h2 class="ft__title">Follow Us</h2>
                             <ul class="social__icon">
-                                <li><a href="" target="_blank"><i class="zmdi zmdi-twitter"></i></a></li>
-                                <li><a href="" target="_blank"><i class="zmdi zmdi-instagram"></i></a></li>
-                                <li><a href="" target="_blank"><i class="zmdi zmdi-facebook"></i></a></li>
-                                <li><a href="" target="_blank"><i class="zmdi zmdi-google-plus"></i></a></li>
+                                <li><a><i class="zmdi zmdi-twitter"></i></a></li>
+                                <li><a><i class="zmdi zmdi-instagram"></i></a></li>
+                                <li><a><i class="zmdi zmdi-facebook"></i></a></li>
+                                <li><a><i class="zmdi zmdi-google-plus"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -348,13 +395,9 @@
                         <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
                             <div class="copyright__inner">
                                 <div class="copyright">
-                                    <p>© 2022 Uniqlo. Made with <i class="ti-heart"></i> by <a target="_blank" href="https://www.facebook.com/phongnv0/">Phong Nguyễn.</a></p>
+                                    <p> <i class="ti-heart"></i> by <a target="_blank" href="https://www.facebook.com/phongnv0/">Phong Nguyễn.</a></p>
                                 </div>
-                                <ul class="footer__menu">
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="shop.html">Product</a></li>
-                                    <li><a href="contact.html">Contact Us</a></li>
-                                </ul>
+
                             </div>
                         </div>
                     </div>

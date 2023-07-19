@@ -230,7 +230,8 @@ namespace Project.Controllers
                 }
             }
             cartItems.AddRange(getListItem());
-            return View(cartItems);
+            string referrerUrl = Request.Headers["Referer"].ToString();
+            return Redirect(referrerUrl);
         }
 
         public List<CartItem> getListItem()
