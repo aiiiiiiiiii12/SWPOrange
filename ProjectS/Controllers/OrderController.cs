@@ -49,7 +49,7 @@ namespace Project.Controllers
         [HttpPost]
         public IActionResult ProcessOrder(string email, string total, string payment, string address)
         {
-            
+
 
             if (string.IsNullOrEmpty(email))
             {
@@ -85,15 +85,28 @@ namespace Project.Controllers
                     return RedirectToAction("Index", "Order");
                 }
                 var newBill = CreateBill(email, total, "1", address);
-                TempData["bill"] = newBill;
+                if (ViewData.ContainsKey("bill"))
+                {
+                    ViewData.Remove("bill");
+                }
+                if (newBill != null)
+                {
+                    ViewData["bill"] = newBill;
+                }
 
             }
-            else{
+            else
+            {
                 return RedirectToAction("Index", "Order");
             }
 
 
-           
+
+            return View();
+        }
+        public IActionResult ProcessOrder()
+        {
+
             return View();
         }
         private Bill CreateBill(string email, string totalAmount, string paymentCode, string address)
@@ -214,11 +227,7 @@ namespace Project.Controllers
         }
 
 
-        public IActionResult ProcessOrder()
-        {
-          
-            return View();
-        }
+
 
         public List<CartItem> getListItem()
         {
@@ -327,9 +336,7 @@ namespace Project.Controllers
             var paymentExecution = new PaymentExecution() { payer_id = PayerID };
             var executedPayment = new Payment() { id = paymentId }.Execute(apiContext, paymentExecution);
 
-            // Xử lý các bước tiếp theo sau khi thanh toán thành công
-            // Ví dụ: Cập nhật trạng thái đơn hàng, gửi email xác nhận, v.v.
-            // Lấy địa chỉ giao hàng
+     
             var shippingAddress = executedPayment.transactions[0].item_list.shipping_address;
             string addressString = $"{shippingAddress.line1}, {shippingAddress.line2}, {shippingAddress.city}, {shippingAddress.state}, {shippingAddress.postal_code}, {shippingAddress.country_code}";
 
@@ -337,8 +344,16 @@ namespace Project.Controllers
             string publictotal = TempData["publictotal"] as string;
             var newBill = CreateBill(publicemail, publictotal, "2", addressString);
 
-            TempData["bill"] = newBill;
-            return RedirectToAction("ProcessOrder");
+            if (ViewData.ContainsKey("bill"))
+            {
+                ViewData.Remove("bill");
+            }
+            if (newBill != null)
+            {
+                ViewData["bill"] = newBill;
+            }
+
+            return View("ProcessOrder");
         }
     }
 
