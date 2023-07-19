@@ -12,14 +12,12 @@ namespace Project.Data
         public ShopContext(DbContextOptions options) : base(options)
         {
         }
-
-
-
+        public virtual DbSet<ProductDetails> productdetails { get; set; } = null!;
         public virtual DbSet<Bill> Bills { get; set; } = null!;
         public virtual DbSet<BillDetail> BillDetails { get; set; } = null!;
         public virtual DbSet<Feedback> Feedbacks { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
-        public virtual DbSet<Payment> Payments { get; set; } = null!;
+        public virtual DbSet<Payments> Payments { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<Transport> Transports { get; set; } = null!;
         public virtual DbSet<IdentityUser> Users { get; set; } = null!;
@@ -30,6 +28,10 @@ namespace Project.Data
         public virtual DbSet<SubCategory> SubCategory { get; set; } = null!;
         public virtual DbSet<Cart> Carts { get; set; } = null!;
         public virtual DbSet<CartItem> CartItems { get; set; } = null!;
+        public virtual DbSet<WishList> WishList { get; set; } = null!;
+        public virtual DbSet<Comment> Comment { get; set; } = null!;
+        public DbSet<Answer> Answer { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -48,6 +50,55 @@ namespace Project.Data
 
             });
 
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasKey(s => s.commentId);
+
+                entity.HasOne(d => d.Blog)
+                    .WithMany(c => c.Comment)
+                    .HasForeignKey(d => d.Blogid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__bilaB5");
+
+                entity.HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
+
+            });
+
+            modelBuilder.Entity<Answer>(entity =>
+            {
+                entity.HasKey(s => s.answerId);
+
+
+                entity.HasOne(d => d.Comment)
+                    .WithMany(p => p.Answers)
+                    .HasForeignKey(d => d.commentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__bills__paB5");
+
+                entity.HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            });
+
+
+            modelBuilder.Entity<WishList>(entity =>
+            {
+                entity.HasKey(s => s.WishListId);
+
+
+            });
+
+
+
+
             modelBuilder.Entity<Cart>(entity =>
             {
                 entity.HasKey(s => s.CartId);
@@ -57,6 +108,13 @@ namespace Project.Data
                 entity.Property(p => p.CartId).ValueGeneratedOnAdd();
 
             });
+
+            modelBuilder.Entity<ProductDetails>(entity =>
+            {
+                entity.HasKey(s => s.productDetailId);
+
+            });
+
 
             modelBuilder.Entity<CartItem>(entity =>
             {
@@ -92,6 +150,8 @@ namespace Project.Data
 
             modelBuilder.Entity<Bill>(entity =>
             {
+                entity.Property(e => e.UserId)
+                  .IsRequired(false);
                 entity.HasKey(b => b.BillId);
                 entity.Property(p => p.BillId).ValueGeneratedOnAdd();
                 entity.Property(e => e.PurchaseDate)
@@ -136,6 +196,8 @@ namespace Project.Data
 
             modelBuilder.Entity<Feedback>(entity =>
             {
+                entity.Property(e => e.FeedbackAnswer)
+                  .IsRequired(false);
                 entity.HasKey(f => f.FeedbackId);
                 entity.Property(p => p.FeedbackId).ValueGeneratedOnAdd();
                 entity.Property(e => e.FeedbackId).HasColumnName("feedback_id");
@@ -183,7 +245,7 @@ namespace Project.Data
                 entity.Property(p => p.CategoryId).ValueGeneratedOnAdd();
             });
 
-            modelBuilder.Entity<Payment>(entity =>
+            modelBuilder.Entity<Payments>(entity =>
             {
                 entity.HasKey(e => e.PaymentCode);
                 entity.Property(p => p.PaymentCode).ValueGeneratedOnAdd();
