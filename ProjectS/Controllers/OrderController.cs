@@ -122,9 +122,13 @@ namespace Project.Controllers
 
             foreach (var b in _shopContext.Bills.Where(c => c.BillStatus == "0").Select(c => c.sellerId).ToList())
             {
-                var pair = myDictionary.FirstOrDefault(x => x.Key == b);
-                myDictionary[pair.Key] = myDictionary[pair.Key] + 1;
-            }
+			   var pair = myDictionary.FirstOrDefault(x => x.Key == b);
+
+				if (!pair.Equals(default(KeyValuePair<string, int>)))
+				{
+					myDictionary[pair.Key] = myDictionary[pair.Key] + 1;
+				}
+			}
 
             var minPair = myDictionary.MinBy(pair => pair.Value);
 
