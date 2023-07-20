@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using OfficeOpenXml;
 using PayPal.Api;
@@ -8,6 +9,7 @@ using WebApplication6.Service;
 
 namespace Project.Controllers
 {
+
     public class AdminController : Controller
     {
         private readonly ShopContext _shopContext;
@@ -17,6 +19,8 @@ namespace Project.Controllers
             _shopContext = shopContext;
             _cloudinaryService = temp;
         }
+
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult Index()
         {
             DateTime now = DateTime.Now;
@@ -71,6 +75,7 @@ namespace Project.Controllers
             return View(myDictionary);
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult cfFeedback()
         {
             var feedbacks = _shopContext.Feedbacks.ToList();
@@ -78,6 +83,7 @@ namespace Project.Controllers
             return View(feedbacks);
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult confirmFeedback(int feedbackId)
         {
             var feedback = _shopContext.Feedbacks.FirstOrDefault(f => f.FeedbackId == feedbackId);
@@ -89,6 +95,8 @@ namespace Project.Controllers
 
             return RedirectToAction("cfFeedback", "admin");
         }
+
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult deleteFb(int feedbackId)
         {
             var feedback = _shopContext.Feedbacks.FirstOrDefault(f => f.FeedbackId == feedbackId);
@@ -101,14 +109,16 @@ namespace Project.Controllers
         }
 
         //display product list
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult DashProduct()
         {
             List<Product> products = _shopContext.Products.ToList();
             return View(products);
         }
 
-		//search product by name
-		public IActionResult searchProductByName(string name)
+        //search product by name
+        [Authorize(Roles = "Seller, Admin, Marketing")]
+        public IActionResult searchProductByName(string name)
 		{
 			List<Product> products = null;
 
@@ -122,8 +132,11 @@ namespace Project.Controllers
 
 			return View(products);
 		}
+
 		[HttpPost]
         //add produc from excel file
+        [Authorize(Roles = "Seller, Admin, Marketing")]
+
         public IActionResult upExcelProduct(IFormFile fileExcel)
         {
 
@@ -168,6 +181,7 @@ namespace Project.Controllers
         }
 
         //Delete product
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult delProd(string productId)
         {
 
@@ -183,6 +197,7 @@ namespace Project.Controllers
 
 
         //change product's Home Status
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult changeHomeStatus(string pid)
         {
 
@@ -210,6 +225,7 @@ namespace Project.Controllers
         }
 
         //create product
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult CreateProduct()
         {
 
@@ -218,6 +234,7 @@ namespace Project.Controllers
             return View(subcate);
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         [HttpPost]
         public IActionResult CreateProduct(IFormFile ImageUrl, Product product)
         {
@@ -231,6 +248,7 @@ namespace Project.Controllers
             return Redirect("DashProduct");
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult ViewDetailProduct(int productId)
         {
             Product product = _shopContext.Products.FirstOrDefault(x => x.ProductId == productId);
@@ -240,6 +258,8 @@ namespace Project.Controllers
             }
             return Redirect("DashProduct");
         }
+
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult UpdateProduct(int productId)
         {
             List<SubCategory> subcate = _shopContext.SubCategory.ToList();
@@ -255,6 +275,7 @@ namespace Project.Controllers
             return Redirect("DashProduct");
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         [HttpPost]
         public IActionResult UpdateProduct(IFormFile ImageUrl, Product updateProd)
         {
@@ -288,7 +309,7 @@ namespace Project.Controllers
             return Redirect("DashProduct");
         }
 
-
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         //Detail Product
         public IActionResult ViewDetailProd(int productId)
         {
@@ -321,6 +342,8 @@ namespace Project.Controllers
             return true;
         }
 
+
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         [HttpPost]
         public IActionResult CreateProductDetail(ProductDetails details)
         {
@@ -341,6 +364,7 @@ namespace Project.Controllers
         }
 
         //delete detail product
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult DelDetailProduct(int productDetailId)
         {
             var detailProd = _shopContext.productdetails.FirstOrDefault(x => x.productDetailId == productDetailId);
@@ -351,7 +375,7 @@ namespace Project.Controllers
             return Redirect($"ViewDetailProd?productId={prodId}");
         }
 
-
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         [HttpPost]
         public IActionResult CreateImageProduct(IFormFile ImageUrl, ImageProduct imageProduct)
         {
@@ -369,6 +393,7 @@ namespace Project.Controllers
             return Redirect($"ViewDetailProd?productId={imageProduct.ProductId}");
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         //delete Image Product
         public IActionResult DelImageProduct(int ImageProductId)
         {

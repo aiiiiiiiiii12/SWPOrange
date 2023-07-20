@@ -109,16 +109,25 @@
 										</td>
 										<td>@bill.TotalPrice</td>
 										<td>@bill.PurchaseDate</td>
-											@*<td><a type="button" class="btn btn-primary btn-sm radius-30 px-4">@bill.ShippingAddress</a></td>*@
+											
 										<td>@bill.ShippingAddress</td>
 
-											@*<div class="d-flex order-actions">
-								<a href="javascript:;" class=""><i class='bx bxs-edit'></i></a>
-								<a href="javascript:;" class="ms-3"><i class='bx bxs-trash'></i></a>
-								</div>*@
+											
 										<td><a href="/Seller/DetailBill/?billId=@bill.BillId" type="button" class="btn btn-primary btn-sm radius-30 px-4">View Detail</a></td>
 										<td>
-											<input class="btn btn-success btn-sm radius-30 px-4" type="submit" value="Confirm" />
+												@if (bill.BillStatus == "0")
+												{
+												<input class="btn btn-success btn-sm radius-30 px-4" type="submit" value="Confirm" />
+												}
+												else if (bill.BillStatus == "1")
+												{
+												<input class="btn btn-success btn-sm radius-30 px-4" type="submit" value="Shipping" />
+												}
+												else if (bill.BillStatus == "2")
+												{
+												<input class="btn btn-success btn-sm radius-30 px-4" type="submit" value="Done" />
+												}
+											
 										</td>
 									</tr>
 									</form>

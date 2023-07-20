@@ -8,7 +8,7 @@ using System.Data;
 
 namespace Project.Controllers
 {
-	[Authorize(Roles = "Seller")]
+	[Authorize(Roles = "Seller, Admin")]
 
 	public class SellerController : Controller
 	{
@@ -25,6 +25,14 @@ namespace Project.Controllers
 		{
 
 			return View();
+		}
+		public IActionResult DoneOrder()
+		{
+            List<Bill> bills = _shopContext.Bills.ToList()
+                .Where(bill => int.TryParse(bill.BillStatus, out int billStatus) && billStatus == 3)
+                .ToList();
+
+            return View(bills);
 		}
 
 		public IActionResult ViewAll()

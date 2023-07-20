@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Project.Data;
@@ -69,6 +70,7 @@ namespace Project.Controllers
             }
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult ViewBlog()
         {
             List<Blog> blog = _context.Blogs.ToList();
@@ -111,11 +113,13 @@ namespace Project.Controllers
             return View(blog);
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult CreateBlog()
         {
             return View();
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         [HttpPost]
         public IActionResult CreateBlog(Blog blog)
         {
