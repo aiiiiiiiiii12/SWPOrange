@@ -41,6 +41,13 @@
     </div>
 
     <main role="main">
+        @if (TempData["checked"] != null)
+        {
+            <script>
+                var mes = "Blog bạn muốn tìm không tồn tại, click Ok để tiếp tục."
+                alert(mes);
+            </script>
+        }
         @if (Model == null)
         {
             <p>No blogs found.</p>
@@ -54,7 +61,7 @@
                             <input oninput="SearchByname()" type="text" id="searchBlog" class="form-control ps-5 radius-30" placeholder="Blog Name">
                         </div>
                         <div class="ms-auto">
-                            <a href="/Blog/CreateBlog" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Add New Blog</a>
+                            <a href="/Blog/CreateBlog" class="btn btn-primary radius-30 mt-2 mt-lg-0" style=" margin-left: 10px; "><i class="bx bxs-plus-square"></i>Add New Blog</a>
                         </div>
                     </div>
 

@@ -50,7 +50,7 @@
 
                         <div class="form-group">
                             <label for="DateUp">Date Updated</label>
-                            <input type="datetime" id="DateUp" name="DateUp" class="form-control" value="@Model.DateUp" />
+                            <input type="datetime" id="DateUp" name="DateUp" class="form-control" value="@Model.DateUp" required />
                         </div>
                     </div>
 
@@ -58,7 +58,7 @@
                         <br />
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" id="name" name="name" class="form-control" value="@Model.name" />
+                            <input type="text" id="name" name="name" class="form-control" value="@Model.name" required />
                         </div>
 
                         <div class="form-check">
@@ -72,12 +72,12 @@
 
                 <div class="form-group">
                     <label for="content">Content</label>
-                    <textarea id="content" name="content" class="form-control">@Model.content</textarea>
+                    <textarea id="content" name="content" class="form-control" required>@Model.content</textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="content2">Second Content</label>
-                    <textarea id="content2" name="content2" class="form-control">@Model.content2</textarea>
+                    <textarea id="content2" name="content2" class="form-control" required>@Model.content2</textarea>
                 </div>
                 <div>
                     <button type="submit" class="btn btn-primary">Update</button>
