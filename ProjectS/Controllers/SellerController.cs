@@ -45,6 +45,18 @@ namespace Project.Controllers
 		}
 
 
+		public IActionResult SearchBillByName(string search)
+		{
+			if (search == null)
+			{
+				search = "";
+			}
+            List<Bill> bills = _shopContext.Bills.ToList()
+                .Where(bill => int.TryParse(bill.BillStatus, out int billStatus) && billStatus < 3 && bill.Email.Contains(search))
+                .ToList();
+			return View(bills);
+        }
+
 		public IActionResult ViewOrder()
 		{
 			var currentUser = HttpContext.User;
