@@ -53,7 +53,7 @@
 								<input oninput="SearchByname()" type="text" id="searchProduct" class="form-control ps-5 radius-30" placeholder="Product Name">
 
 							</div>
-							<div class="ms-auto"><a href="/Admin/CreateProduct" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Add new product</a></div>
+							<div class="ms-auto"><a href="/Admin/CreateProduct" style="margin-left: 10px" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Add new product</a></div>
 
 
 
@@ -81,6 +81,13 @@
 
 				<div class="table-responsive">
 					<div id="_prodList">
+						@if (TempData["checked"] != null)
+						{
+							<script>
+								var mes = "Product bạn muốn tìm không tồn tại, click Ok để tiếp tục."
+								alert(mes);
+							</script>
+						}
 						@if (Model == null)
 						{
 							<p>No Products found.</p>

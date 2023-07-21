@@ -6,6 +6,7 @@ using OfficeOpenXml;
 using PayPal.Api;
 using Project.Data;
 using Project.Models;
+using System.Reflection.Metadata;
 using WebApplication6.Service;
 
 namespace Project.Controllers
@@ -295,7 +296,10 @@ namespace Project.Controllers
                 _shopContext.SaveChanges();
                 return Redirect("DashProduct");
             }
-            return Redirect("Index");
+            
+
+             return Redirect("Index");
+           
         }
 
 
@@ -359,7 +363,12 @@ namespace Project.Controllers
             {
                 return View(product);
             }
-            return Redirect("DashProduct");
+            else
+            {
+                TempData["checked"] = "";
+                return Redirect("/Admin/DashProduct");
+            }
+            
         }
 
         [Authorize(Roles = "Seller, Admin, Marketing")]
@@ -375,7 +384,12 @@ namespace Project.Controllers
 
                 return View(subcate);
             }
-            return Redirect("DashProduct");
+            else
+            {
+                TempData["checked"] = "";
+                return Redirect("/Admin/DashProduct");
+            }
+
         }
 
         [Authorize(Roles = "Seller, Admin, Marketing")]
@@ -423,6 +437,11 @@ namespace Project.Controllers
                 ViewBag.ProductDetails = pr;
                 List<ImageProduct> imgProd = _shopContext.ImageProducts.Where(x => x.ProductId == productId).ToList();
                 ViewBag.ImageProducts = imgProd;
+            }
+            else
+            {
+                TempData["checked"] = "";
+                return Redirect("/Admin/DashProduct");
             }
             return View(product);
         }

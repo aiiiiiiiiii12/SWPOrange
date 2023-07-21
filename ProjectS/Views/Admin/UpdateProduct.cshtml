@@ -59,7 +59,7 @@
                                                     <div class="row">
                                                         <label class="col-md-4">Name :</label>
                                                         <div class="col-md-8">
-                                                            <input class="form-control" name="ProductName" type="text" value="@product.ProductName">
+                                                            <input class="form-control" name="ProductName" type="text" value="@product.ProductName" required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -67,7 +67,7 @@
                                                     <div class="row">
                                                         <label class="col-md-4">Description :</label>
                                                         <div class="col-md-8">
-                                                            <textarea rows="4" cols="5" name="ProductDescription" class="form-control">@product.ProductDescription</textarea>
+                                                            <textarea rows="4" cols="5" name="ProductDescription" class="form-control" required>@product.ProductDescription</textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -100,7 +100,7 @@
                                                     <div class="row">
                                                         <label class="col-md-4" for="DateUp">Date Updated</label>
                                                         <div class="col-md-8">
-                                                            <input type="date" id="DateUp" name="ImportDate" class="form-control" value="@product.ImportDate.ToString("yyyy-MM-dd")" />
+                                                            <input type="date" id="DateUp" name="ImportDate" class="form-control" value="@product.ImportDate.ToString("yyyy-MM-dd")" required />
                                                         </div>
 
                                                     </div>
@@ -119,7 +119,7 @@
                                                     <div class="row">
                                                         <label class="col-md-4">Price :</label>
                                                         <div class="col-md-8">
-                                                            <input class="form-control" name="ProductPrice" type="number" min="0" step="0.01" value="@product.ProductPrice">
+                                                            <input class="form-control" name="ProductPrice" type="number" min="0" step="0.01" value="@product.ProductPrice" required>
                                                         </div>
                                                     </div>
                                                 </div>
