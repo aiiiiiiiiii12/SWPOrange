@@ -165,7 +165,7 @@ namespace Project.Controllers
                 }
             }
 
-            return View(cartItems);
+            return View(getListItem());
         }
 
         [HttpPost]

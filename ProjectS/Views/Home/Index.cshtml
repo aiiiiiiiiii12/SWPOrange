@@ -14,6 +14,15 @@
     </script>
 }
 
+
+@if (TempData["subCate"] != null)
+{
+    <script>
+        var thongBao = "Loại bạn vừa tiềm kiếm không tồn tại, click OK để tiếp tục.";
+        alert(thongBao);
+    </script>
+}
+
 <div class="slider__container slider--one">
     <div class="slider__activation__wrap owl-carousel owl-theme">
         @if (listBlog != null)

@@ -28,7 +28,7 @@
                                     }
                                     else
                                     {
-                                        <a asp-controller="Product" asp-action="Index" asp-route-gender="@ViewData["gender"]" asp-route-id="@l.SubCategoryId" style="font-size: 17px; margin-right:25px">@l.Name</a>
+                                        <a asp-controller="Product" asp-action="Index"  asp-route-id="@l.SubCategoryId" style="font-size: 17px; margin-right:25px">@l.Name</a>
                                     }
                                 }
                             }
@@ -39,8 +39,8 @@
                                 Tìm kiếm theo giá
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a asp-route-mode="1" asp-route-gender="@ViewData["gender"]" asp-route-id="@ViewData["id"]" asp-controller="Product" class="dropdown-item">Giá: Giá thấp đến cao</a></li>
-                                <li><a asp-route-mode="2" asp-route-gender="@ViewData["gender"]" asp-route-id="@ViewData["id"]" asp-controller="Product" class="dropdown-item">Giá: giá cao đến thấp</a></li>
+                                <li><a asp-route-mode="1"  asp-route-id="@ViewData["id"]" asp-controller="Product" class="dropdown-item">Giá: Giá thấp đến cao</a></li>
+                                <li><a asp-route-mode="2"  asp-route-id="@ViewData["id"]" asp-controller="Product" class="dropdown-item">Giá: giá cao đến thấp</a></li>
                             </ul>
                         </div>
                     </div>

@@ -119,21 +119,21 @@ namespace Project.Controllers
         //search product by name
         [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult searchProductByName(string name)
-		{
-			List<Product> products = null;
+        {
+            List<Product> products = null;
 
-			if (name != null)
-			{
-				products = _shopContext.Products.Where(x => x.ProductName.Contains(name)).ToList();
-			}
-			else
+            if (name != null)
+            {
+                products = _shopContext.Products.Where(x => x.ProductName.Contains(name)).ToList();
+            }
+            else
 
-				products = _shopContext.Products.ToList();
+                products = _shopContext.Products.ToList();
 
-			return View(products);
-		}
+            return View(products);
+        }
 
-		[HttpPost]
+        [HttpPost]
         //add produc from excel file
         [Authorize(Roles = "Seller, Admin, Marketing")]
 
@@ -143,38 +143,138 @@ namespace Project.Controllers
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             if (fileExcel != null && fileExcel.Length > 0)
             {
-                using (var package = new ExcelPackage(fileExcel.OpenReadStream()))
+                try
                 {
-                    try
+                    using (var package = new ExcelPackage(fileExcel.OpenReadStream()))
                     {
-                        var worksheet = package.Workbook.Worksheets[0];
-
-
-                        int rowCount = worksheet.Dimension.Rows;
-                        for (int row = 2; row <= rowCount; row++) // Start from the second row (excluding the header)
+                        try
                         {
-                            var product = new Product();
-                            //name, description, category, date, discout,price image, avaiable, homestatus
-                            product.ProductName = worksheet.Cells[row, 1].Value.ToString(); // Read value from the Name column (column 2)
-                            product.ProductDescription = worksheet.Cells[row, 2].Value.ToString();
-                            product.SubCategoryID = int.Parse(worksheet.Cells[row, 3].Value.ToString());
-                            product.ImportDate = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd"));
-                            product.Discount = double.Parse(worksheet.Cells[row, 4].Value.ToString());
-                            product.ProductPrice = double.Parse(worksheet.Cells[row, 5].Value.ToString());
-                            product.ImageMain = worksheet.Cells[row, 6].Value.ToString();
-                            product.IsAvailble = false;
-                            product.HomeStatus = false;
-                            _shopContext.Products.Add(product);
-                            _shopContext.SaveChanges();
-                        }
-                        TempData["checkExcel"] = "add successfull";
-                    }
-                    catch (Exception ex)
-                    {
-                        TempData["checkExcel"] = "add failed";
-                        return Redirect("DashProduct");
-                    }
+                            var worksheet = package.Workbook.Worksheets[0];
 
+
+                            int rowCount = worksheet.Dimension.Rows;
+                            for (int row = 2; row <= rowCount; row++) // Start from the second row (excluding the header)
+                            {
+                                var product = new Product();
+                                //name, description, category, date, discout,price image, avaiable, homestatus
+                                if (worksheet.Cells[row, 1].Value == null)
+                                {
+                                    TempData["checkExcel"] = "add failed";
+                                    return Redirect("DashProduct");
+                                }
+                                else
+                                {
+                                    product.ProductName = worksheet.Cells[row, 1].Value.ToString(); // Read value from the Name column (column 2)
+                                }
+
+
+                                if (worksheet.Cells[row, 2].Value == null)
+                                {
+                                    TempData["checkExcel"] = "add failed";
+                                    return Redirect("DashProduct");
+                                }
+                                else
+                                {
+                                    product.ProductDescription = worksheet.Cells[row, 2].Value.ToString();
+                                }
+
+
+                                if (worksheet.Cells[row, 3].Value == null)
+                                {
+                                    TempData["checkExcel"] = "add failed";
+                                    return Redirect("DashProduct");
+                                }
+                                else
+                                {
+                                    string cellValue = worksheet.Cells[row, 3].Value.ToString();
+                                    if (int.TryParse(cellValue, out int result))
+                                    {
+                                        product.SubCategoryID = result;
+                                    }
+                                    else
+                                    {
+                                        TempData["checkExcel"] = "add failed";
+                                        return Redirect("DashProduct");
+                                    }
+
+                                }
+
+
+                                product.ImportDate = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd"));
+
+
+                                if (worksheet.Cells[row, 4].Value == null)
+                                {
+                                    TempData["checkExcel"] = "add failed";
+                                    return Redirect("DashProduct");
+                                }
+                                else
+                                {
+                                    string cellValue = worksheet.Cells[row, 4].Value.ToString();
+                                    if (double.TryParse(cellValue, out double result))
+                                    {
+                                        product.Discount = result;
+                                    }
+                                    else
+                                    {
+                                        TempData["checkExcel"] = "add failed";
+                                        return Redirect("DashProduct");
+                                    }
+
+                                }
+
+
+                                if (worksheet.Cells[row, 5].Value == null)
+                                {
+                                    TempData["checkExcel"] = "add failed";
+                                    return Redirect("DashProduct");
+                                }
+                                else
+                                {
+                                    string cellValue = worksheet.Cells[row, 5].Value.ToString();
+                                    if (double.TryParse(cellValue, out double result))
+                                    {
+                                        product.ProductPrice = result;
+                                    }
+                                    else
+                                    {
+                                        TempData["checkExcel"] = "add failed";
+                                        return Redirect("DashProduct");
+                                    }
+
+                                }
+
+
+                                if( worksheet.Cells[row, 6].Value == null)
+                                {
+                                    TempData["checkExcel"] = "add failed";
+                                    return Redirect("DashProduct");
+                                }
+                                else
+                                {
+                                    product.ImageMain = worksheet.Cells[row, 6].Value.ToString();
+
+                                }
+                              
+                                product.IsAvailble = false;
+                                product.HomeStatus = false;
+                                _shopContext.Products.Add(product);
+                                _shopContext.SaveChanges();
+                            }
+                            TempData["checkExcel"] = "add successfull";
+                        }
+                        catch (Exception ex)
+                        {
+                            TempData["checkExcel"] = "add failed";
+                            return Redirect("DashProduct");
+                        }
+
+                    }
+                }
+                catch
+                {
+                    TempData["checkExcel"] = "add failed";
+                    return Redirect("DashProduct");
                 }
             }
             return Redirect("DashProduct");

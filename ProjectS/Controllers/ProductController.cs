@@ -26,19 +26,39 @@ namespace Project.Controllers
 
 
 
-        public IActionResult Index(int id, bool gender, int mode)
+        public IActionResult Index(int id, int mode)
         {
 
             List<SubCategory> subCategories = new List<SubCategory>();
             var list = (from p in _shopContext.Products
                         where p.SubCategoryID == id
                         select p).ToList();
+
+            if(list == null)
+            {
+                TempData["subCate"] = "";
+                return Redirect("/Home/Index");
+            }
+               
+
             var subCate = (from c in _shopContext.SubCategory
                            where c.SubCategoryId == id
                            select c).FirstOrDefault();
+
+            if (subCate == null)
+            {
+                TempData["subCate"] = "";
+                return Redirect("/Home/Index");
+            }
             var cateGory = (from c in _shopContext.Categories
                             where c.CategoryId == subCate.CateogoryId
                             select c).First();
+
+            if (cateGory == null)
+            {
+                TempData["subCate"] = "";
+                return Redirect("/Home/Index");
+            }
             if (cateGory != null)
             {
                 var e = _shopContext.Entry(cateGory);
@@ -47,10 +67,8 @@ namespace Project.Controllers
             }
             subCategories.Sort((x, y) => x.SubCategoryId.CompareTo(y.SubCategoryId));
             ViewData["id"] = id;
-            ViewData["gender"] = gender;
             ViewData["listSubCate"] = subCategories;
             ViewData["subCate"] = subCate;
-            ViewData["gender"] = gender;
 
             if (mode == 1)
             {
