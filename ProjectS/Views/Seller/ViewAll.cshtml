@@ -15,7 +15,7 @@
 				<div class="page-breadcrumb">
 					<nav aria-label="breadcrumb">
 						<ol class="breadcrumb">
-							<li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
+							<li class="breadcrumb-item"><a href="/admin/index" class="breadcrumb-link">Dashboard</a></li>
 							<li class="breadcrumb-item active" aria-current="page">View all orders</li>
 						</ol>
 					</nav>
@@ -39,13 +39,10 @@
 						<div class="position-relative">
 							<input type="text" class="form-control ps-5 radius-30" placeholder="Search Order"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
 						</div>
-						<div class="ms-auto"><a href="#" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Add New Order</a></div>
+						<div class="ms-auto"><a href="#" class="btn btn-primary radius-30 mt-2 mt-lg-0" style=" margin-left: 10px; "><i class="bx bxs-plus-square"></i>Add New Order</a></div>
 
 					</div>
 					<div class="ms-auto text-end">
-						<a href="#" class="btn btn-primary radius-30 mt-2 mt-lg-0">
-							<i class="bx bxs-plus-square"></i>Confirm All
-						</a>
 					</div>
 
 					<div class="table-responsive">
@@ -73,7 +70,6 @@
 										<td>
 											<div class="d-flex align-items-center">
 												<div>
-													<input class="form-check-input me-3" type="checkbox" value="" aria-label="...">
 												</div>
 												<div class="ms-2">
 													<h6 class="mb-0 font-14">@bill.BillId</h6>
@@ -107,27 +103,27 @@
 									</div>
 									}*@
 										</td>
-										<td>@bill.TotalPrice</td>
-										<td>@bill.PurchaseDate</td>
-											
+										<td>@(bill.TotalPrice.ToString("N0").Replace(",", ".") + ".000" + " VND")</td>
+										<td>@string.Format("{0:dddd, dd MMMM yyyy}", bill.PurchaseDate)</td>
+
 										<td>@bill.ShippingAddress</td>
 
-											
+
 										<td><a href="/Seller/DetailBill/?billId=@bill.BillId" type="button" class="btn btn-primary btn-sm radius-30 px-4">View Detail</a></td>
 										<td>
 												@if (bill.BillStatus == "0")
 												{
-												<input class="btn btn-success btn-sm radius-30 px-4" type="submit" value="Confirm" />
+												<input class="btn btn-success btn-sm radius-30 px-4" style="width:9vw" type="submit" value="Confirm" />
 												}
 												else if (bill.BillStatus == "1")
 												{
-												<input class="btn btn-success btn-sm radius-30 px-4" type="submit" value="Shipping" />
+												<input class="btn btn-success btn-sm radius-30 px-4" style="width:9vw" type="submit" value="Shipping" />
 												}
 												else if (bill.BillStatus == "2")
 												{
-												<input class="btn btn-success btn-sm radius-30 px-4" type="submit" value="Done" />
+												<input class="btn btn-success btn-sm radius-30 px-4" style="width:9vw" type="submit" value="Done" />
 												}
-											
+
 										</td>
 									</tr>
 									</form>

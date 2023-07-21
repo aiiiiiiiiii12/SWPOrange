@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using PayPal.Api;
 using Project.Data;
@@ -75,15 +76,17 @@ namespace Project.Controllers
             return View(myDictionary);
         }
 
-        [Authorize(Roles = "Seller, Admin, Marketing")]
-        public IActionResult cfFeedback()
-        {
-            var feedbacks = _shopContext.Feedbacks.ToList();
+		[Authorize(Roles = "Seller, Admin, Marketing")]
+		public IActionResult cfFeedback()
+		{
+			var feedbacks = _shopContext.Feedbacks
+				.Include(i => i.User)
+				.ToList();
 
-            return View(feedbacks);
-        }
+			return View(feedbacks);
+		}
 
-        [Authorize(Roles = "Seller, Admin, Marketing")]
+		[Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult confirmFeedback(int feedbackId)
         {
             var feedback = _shopContext.Feedbacks.FirstOrDefault(f => f.FeedbackId == feedbackId);
