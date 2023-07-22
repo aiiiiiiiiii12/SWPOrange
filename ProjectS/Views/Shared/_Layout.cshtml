@@ -88,7 +88,6 @@
     <link rel="stylesheet" href="~/css/style.css">
     <link rel="stylesheet" href="~/css/responsive.css">
     <link rel="stylesheet" href="~/css/custom.css">
-    <link rel="stylesheet" href="~/css/custom.css">
     <script src="~/js/vendor/modernizr-3.11.2.min.js"></script>
 </head>
 <body>
@@ -229,10 +228,12 @@
                                 }
                                 @if (count > 0)
                                 {
+                                    
                                     <li class="">
                                         <a asp-action="WishList" asp-controller="Product">
+                                            
                                             <span class="position-relative ti-heart">
-                                                <span style=" width: 18px; width: 19px;height: 19px;line-height: 19px; font-size: 11px; border-radius: 40%;color: white " class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle small-circle">
+                                                <span style=" line-height: 13px; font-size: 11px; border-radius: 40%;color: white " class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle small-circle">
                                                     @count
                                                     <span class="visually-hidden">unread messages</span>
                                                 </span>
@@ -252,7 +253,7 @@
                                     <li class="">
                                         <a asp-action="Index" asp-controller="Cart">
                                             <span class="position-relative ti-shopping-cart">
-                                                <span style=" width: 18px; width: 19px;height: 19px;line-height: 19px; font-size: 11px; border-radius: 40%;color: white " class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle small-circle">
+                                                <span style=" line-height: 13px; font-size: 11px; border-radius: 40%;color: white " class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle small-circle">
                                                     @count2
                                                     <span class="visually-hidden">unread messages</span>
                                                 </span>
