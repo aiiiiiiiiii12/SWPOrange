@@ -27,8 +27,8 @@
                                 </div>
                                 <div class="product__hover__info">
                                     <ul class="product__action">
-                                        <li><a asp-controller="Product" asp-action="DetailProduct" asp-route-id="@l.ProductId" title="Quick View" class="quick-view modal-view detail-link"><span class="ti-plus"></span></a></li>
-                                        <li><a title="Add TO Cart" asp-route-id="@l.ProductId" asp-action="RemoveWishList" asp-controller="Product"><span class="ti-close"></span></a></li>
+                                        <li><a asp-controller="Product" asp-action="DetailProduct" asp-route-id="@l.ProductId" title="View" class="quick-view modal-view detail-link"><span class="ti-eye"></span></a></li>
+                                        <li><a title="Remove" asp-route-id="@l.ProductId" class="scroll-link" asp-action="RemoveWishList" asp-controller="Product"><span class="ti-close"></span></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -64,3 +64,23 @@
         </div>
     </div>
 </section>
+
+<script>
+    var links = document.querySelectorAll(".scroll-link");
+    for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener("click", function (event) {
+            event.preventDefault();
+            var scrollPos = window.scrollY;
+            localStorage.setItem("scrollPos", scrollPos);
+            window.location.href = this.href;
+        });
+    }
+
+    window.onload = function () {
+        var scrollPos = localStorage.getItem("scrollPos");
+        if (scrollPos) {
+            window.scrollTo({ top: scrollPos, behavior: 'auto' });
+            localStorage.removeItem("scrollPos");
+        }
+    };
+</script>

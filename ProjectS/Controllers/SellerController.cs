@@ -44,6 +44,17 @@ namespace Project.Controllers
             return View(bills);
         }
 
+        public IActionResult SearchBillByName(string search)
+        {
+            if (search == null)
+            {
+                search = "";
+            }
+            List<Bill> bills = _shopContext.Bills.ToList()
+                .Where(bill => int.TryParse(bill.BillStatus, out int billStatus) && billStatus < 3 && bill.Email.Contains(search))
+                .ToList();
+            return View(bills);
+        }
 
         public IActionResult ViewOrder()
         {
@@ -66,7 +77,26 @@ namespace Project.Controllers
             }
         }
 
+        public IActionResult SearchViewOrderByEmail(string search)
+        {
+			var currentUser = HttpContext.User;
+            if (search == null) search = "";
+			if (currentUser.Identity.IsAuthenticated)
+			{
+				List<Bill> bills = _shopContext.Bills
+					.Where(bill => bill.Email == currentUser.Identity.Name && bill.Email.Contains(search))
+					.ToList();
 
+				bills = bills.Where(bill => int.TryParse(bill.BillStatus, out int billStatus) && billStatus < 3 && bill.Email.Contains(search))
+					.ToList();
+
+				return View(bills);
+			}
+			else
+			{
+				return RedirectToAction("Index");
+			}
+		}
 
 
 

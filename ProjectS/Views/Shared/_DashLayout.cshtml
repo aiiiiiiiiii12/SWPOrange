@@ -27,6 +27,7 @@
     var isAdmin = user.Identity.IsAuthenticated && user.IsInRole("Admin");
     var isMarketing = user.Identity.IsAuthenticated && user.IsInRole("Marketing");
     var isSeller = user.Identity.IsAuthenticated && user.IsInRole("Seller");
+    var user1 = SignInManager.UserManager.GetUserAsync(User).Result;
 }
 
 <!-- Đoạn mã HTML khác trong layout -->
@@ -51,7 +52,17 @@
                 </button>
                 <div class="collapse navbar-collapse " id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto navbar-right-top">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li style="margin-top: 20px; border-right: 0px;" class="nav-item">
+                                @{
 
+                                    var email = user1.Email;
+                                    var username = email.Substring(0, email.IndexOf("@"));
+                                }
+                                <a style="margin-top : 10px"> @username</a>
+                            </li>
+                        }
                         <li class="nav-item dropdown nav-user">
                             <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="~/dashbroadcss/images/avatar-1.jpg" alt="" class="user-avatar-md rounded-circle"></a>
                             <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
@@ -203,13 +214,6 @@
             <div class="row">
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                     Made by <a href="https://www.facebook.com/phongnv0/">Phong Nguyễn</a>.
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="text-md-right footer-links d-none d-sm-block">
-                        <a href="javascript: void(0);">About</a>
-                        <a href="javascript: void(0);">Support</a>
-                        <a href="javascript: void(0);">Contact Us</a>
-                    </div>
                 </div>
             </div>
         </div>

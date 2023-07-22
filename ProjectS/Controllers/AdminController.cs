@@ -31,7 +31,6 @@ namespace Project.Controllers
             double totalMonth = 0;
             double totalDay = 0;
             SortedDictionary<int, double> myDictionary = new SortedDictionary<int, double>();
-            SortedDictionary<int, string> myyDictionary = new SortedDictionary<int, string>();
 
             foreach (var l in x)
             {
@@ -74,10 +73,48 @@ namespace Project.Controllers
                         totalDay += l.TotalPrice;
                 }
             }
+
+
+            var groupedBillDetails = _shopContext.BillDetails
+                                       .GroupBy(billDetail => billDetail.ProductId)
+                                       .Select(group => new
+                                       {
+                                           ProductId = group.Key,
+                                           TotalQuantity = group.Sum(item => item.quantity),
+                                       })
+                                      .OrderByDescending(product => product.TotalQuantity)
+                                      .Take(3)
+                                      .ToList();
+            ViewData["top1"] = "";
+            ViewData["top11"] = "";
+            ViewData["top2"] = "";
+            ViewData["top22"] = "";
+            ViewData["top3"] = "";
+            ViewData["top33"] = "";
+            var i = 1;
+            foreach (var l in groupedBillDetails)
+            {
+                foreach (var ls in _shopContext.Products.ToList())
+                {
+                    if (ls.ProductId == l.ProductId)
+                    {
+                        Console.WriteLine(ls.ProductName);
+                        ViewData[$"top{i}"] = ls.ProductName;
+                        ViewData[$"top{i}{i}"] = l.TotalQuantity;
+                        i++;
+                    }
+                }
+            }
+
+            ViewData["pCount"] = _shopContext.Products.ToList().Count();
+            ViewData["uCount"] = _shopContext.Users.ToList().Count();
+            ViewData["yCount"] = _shopContext.SubCategory.Count();
+            ViewData["rCount"] = _shopContext.Bills.ToList().Count;
+
             return View(myDictionary);
         }
 
-		[Authorize(Roles = "Seller, Admin, Marketing")]
+        [Authorize(Roles = "Seller, Admin, Marketing")]
 		public IActionResult cfFeedback()
 		{
 			var feedbacks = _shopContext.Feedbacks
