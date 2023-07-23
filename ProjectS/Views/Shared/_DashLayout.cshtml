@@ -127,12 +127,18 @@
                                     <a class="nav-link" href="/Seller/Order" data-toggle="collapse" aria-expanded="false" data-target="#submenu-4" aria-controls="submenu-4"><i class="fab fa-fw fa-wpforms"></i>Order</a>
                                     <div id="submenu-4" class="collapse submenu" style="">
                                         <ul class="nav flex-column">
+                                            @if (isAdmin)
+                                         {
                                             <li class="nav-item">
                                                 <a class="nav-link" href="/Seller/ViewAll">View All Order</a>
                                             </li>
+                                          }
+                                            @if (isSeller)
+                                            {
                                             <li class="nav-item">
                                                 <a class="nav-link" href="/Seller/ViewOrder">Order for Seller</a>
                                             </li>
+                                            }
                                             <li class="nav-item">
                                                 <a class="nav-link" href="/Seller/DoneOrder">All Order Done</a>
                                             </li>
