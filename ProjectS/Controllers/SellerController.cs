@@ -5,6 +5,7 @@ using Project.Data;
 using Project.Models;
 using Project.Service;
 using System.Data;
+using System.Security.Claims;
 
 namespace Project.Controllers
 {
@@ -62,8 +63,10 @@ namespace Project.Controllers
 
             if (currentUser.Identity.IsAuthenticated)
             {
+                string currentUserId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+
                 List<Bill> bills = _shopContext.Bills
-                    .Where(bill => bill.Email == currentUser.Identity.Name)
+                    .Where(bill => bill.sellerId == currentUserId)
                     .ToList();
 
                 bills = bills.Where(bill => int.TryParse(bill.BillStatus, out int billStatus) && billStatus < 3)
