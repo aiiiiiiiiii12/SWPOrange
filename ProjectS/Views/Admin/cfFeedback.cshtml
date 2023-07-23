@@ -86,10 +86,16 @@
 										<td>@feedback.FeedbackDetail</td>
 
 										<td><a href="/Admin/deleteFb/?feedbackId=@feedback.FeedbackId" type="button" class="btn btn-danger btn-sm radius-30 px-4">Delete</a></td>
-
-										<td><a href="/Admin/confirmFeedback/?feedbackId=@feedback.FeedbackId" type="button" class="btn btn-primary btn-sm radius-30 px-4">Confirm</a></td>
+										@if (feedback.FeedbackStatus == "0")
+										{
+											<td><a href="/Admin/confirmFeedback/?feedbackId=@feedback.FeedbackId" type="button" class="btn btn-primary btn-sm radius-30 px-4">Confirm</a></td>
+										}
+										@if (feedback.FeedbackStatus == "1")
+										{
+											<td><a  type="button" class="btn btn-success btn-sm radius-30 px-4">Confirmed</a></td>
+										}
 									</tr>
-									@*						}*@
+									
 								}
 
 							</tbody>
