@@ -463,6 +463,9 @@ namespace Project.Controllers
             return Redirect("DashProduct");
         }
 
+
+
+
         [Authorize(Roles = "Seller, Admin, Marketing")]
         //Detail Product
         public IActionResult ViewDetailProd(int productId)
@@ -512,6 +515,7 @@ namespace Project.Controllers
             {
                 _shopContext.Add(details);
                 _shopContext.SaveChanges();
+                ChangeAvaiableProduct(details.productId);
                 mess = "create successfully";
             }
             else
@@ -530,6 +534,8 @@ namespace Project.Controllers
             int prodId = detailProd.productId;
             _shopContext.Remove(detailProd);
             _shopContext.SaveChanges();
+            ChangeAvaiableProduct(prodId);
+
             TempData["mess"] = " delete sucessfully";
             return Redirect($"ViewDetailProd?productId={prodId}");
         }
@@ -559,13 +565,30 @@ namespace Project.Controllers
             ImageProduct img = _shopContext.ImageProducts.FirstOrDefault(x => x.ImageProductId == ImageProductId);
             int prodId = img.ProductId;
             _shopContext.Remove(img);
+
             _shopContext.SaveChanges();
+           
 
             TempData["mess"] = "delete sucessfully";
             return Redirect($"ViewDetailProd?productId={prodId}");
         }
 
-
+        private void ChangeAvaiableProduct(int productId)
+        {
+            var detailList = _shopContext.productdetails.Where(x => x.productId == productId && x.quantity > 0).ToList();
+            var product = _shopContext.Products.FirstOrDefault(x => x.ProductId == productId);
+            if (detailList == null || detailList.Count == 0  )
+            {
+                product.IsAvailble = false;
+                
+            }
+            else
+            {
+                product.IsAvailble = true;
+            }
+            _shopContext.Update(product);
+            _shopContext.SaveChanges();
+        }
 
     }
 }

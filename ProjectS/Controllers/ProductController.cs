@@ -101,6 +101,25 @@ namespace Project.Controllers
                 return RedirectToAction("Index", "Home", new { mode = "EDetailProduct" });
             }
 
+
+            int check = 0;
+
+            foreach (var item in _shopContext.productdetails.Where(p => p.productId == id))
+            {
+                if (item.quantity > 0)
+                {
+                    check = 1;
+                    break;
+                }
+            }
+
+            if (check == 0)
+            {
+                product.IsAvailble = false;
+                _shopContext.SaveChanges();
+            }
+
+
             string size = "";
             string color = "";
             var list = new List<string>();

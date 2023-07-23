@@ -171,11 +171,16 @@ namespace Project.Controllers
         [HttpPost]
         public IActionResult Index(IFormCollection f)
         {
+           
 
             var color = f["color"];
             var size = f["size"];
             var qua = int.Parse(f["Quantity"]);
             int pId = int.Parse(f["productId"]);
+
+            if (string.IsNullOrEmpty(color) || string.IsNullOrEmpty(size))
+                return Redirect("/Home/Index");
+
             List<CartItem> cartItems = new List<CartItem>();
             if (_SignInManager.IsSignedIn(User))
             {

@@ -196,6 +196,15 @@
                             <div class="product- border-bottom">
                                 <h3 class="mb-0 text-danger">Discount @Model.Discount%</h3>
                                 <h3 class="mb-0 text-primary">$@Model.ProductPrice</h3>
+                               
+                                @if (Model.IsAvailble==true)
+                                {
+                                   <h3 class="mb-0 text-danger">Status: stocking</h3>
+                                }else
+                                {
+                                    <h3 class="mb-0 text-danger">Status: out of stock</h3>
+                                }
+
                             </div>
                             <div class="product-description">
                                 <h4 class="mb-1">Descriptions</h4>
