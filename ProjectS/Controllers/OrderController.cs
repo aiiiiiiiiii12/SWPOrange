@@ -47,7 +47,7 @@ namespace Project.Controllers
 
 
         [HttpPost]
-        public IActionResult ProcessOrder(string email, string total, string payment, string address)
+        public IActionResult ProcessOrder(string email, string total, string payment, string address, string phone)
         {
 
 
@@ -56,6 +56,19 @@ namespace Project.Controllers
                 TempData["Error"] = "Không được để rỗng";
                 return RedirectToAction("Index", "Order");
             }
+
+            if (string.IsNullOrEmpty(phone) || phone.Length < 9)
+            {
+                TempData["Errorr"] = "Sai định dạng";
+                return RedirectToAction("Index", "Order");
+            }
+
+            if (int.TryParse(phone, out _) == false)
+            {
+                TempData["Errorr"] = "Sai định dạng";
+                return RedirectToAction("Index", "Order");
+            }
+
             if (payment == "2")
             {
                 TempData["publicemail"] = email;
