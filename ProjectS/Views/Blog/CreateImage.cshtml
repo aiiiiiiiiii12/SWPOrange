@@ -88,12 +88,12 @@
                 <br />
                 <div class="form-group">
                     <label for="ImageUrl">Image URL</label>
-                    <input type="file" id="ImageUrl" name="ImageUrl" class="form-control" />
+                    <input type="file" id="ImageUrl" name="ImageUrl" class="form-control" required />
                 </div>
 
                 <div class="form-group">
                     <label for="DateUp">Date Up</label>
-                    <input type="datetime" id="DateUp" name="DateUp" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <input type="datetime" id="DateUp" name="DateUp" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
                 </div>
 
                 <div class="form-check">
@@ -102,12 +102,26 @@
                 </div><br />
 
                 <div>
-                    <button type="submit" class="btn btn-primary">Create Image</button>
+                    <button type="submit" id="submitButton" class="btn btn-primary">Create Image</button>
                     <a href="/Blog/ViewBlog" class="btn btn-primary">View Blog</a>
                 </div><br />
             </div>
 
         </form>
+        <script>
+            document.getElementById('ImageUrl').addEventListener('change', function () {
+                var fileInput = document.getElementById('ImageUrl');
+                var submitButton = document.getElementById('submitButton');
+
+                if (fileInput.files && fileInput.files[0]) {
+                    submitButton.disabled = false;
+                } else {
+                    submitButton.disabled = true;
+                }
+            });
+        </script>
+        
+      
     </main>
     <!-- end pageheader  -->
 </div>

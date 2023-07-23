@@ -64,18 +64,18 @@
                                                     </h3>
                                                 </td>
                                                 <td class="product-subtotal">
-                                                @(
-                                                    product.ProductPrice - product.Discount
-                                                    ).000VND
+                                                    @(
+                                                        (product.ProductPrice - product.Discount).ToString("N0").Replace(",", ".") + ".000" + " VND"
+                                                        )
                                                 </td>
                                                 <td class="product-subtotal">
-                                                @(
-                                                    (product.ProductPrice - product.Discount) * l.Quantity
-                                                    )
+                                                    @(
+                                                        ((product.ProductPrice - product.Discount) * l.Quantity).ToString("N0").Replace(",", ".") + ".000" + " VND"
+                                                        )
 
-                                                @{
-                                                    total = total + (product.ProductPrice - product.Discount) * l.Quantity;
-                                                }.000VND
+                                                    @{
+                                                        total = total + (product.ProductPrice - product.Discount) * l.Quantity;
+                                                    }
                                                 </td>
                                                 <td class="product-remove"><a asp-controller="Cart" asp-action="Index" asp-route-choice="remove" asp-route-id="@l.CartItemId">X</a></td>
                                             </tr>
@@ -86,12 +86,9 @@
                             <div class="row">
                                 <div class="col-md-8 col-sm-12">
                                     <div class="buttons-cart">
-                                        <a href="#">Continue Shopping</a>
+                                        <a href="/home/index">Back To Home</a>
                                     </div>
                                     <div class="coupon">
-                                        <h3>Coupon</h3>
-                                        <p>Enter your coupon code if you have one.</p>
-                                        <input type="text" placeholder="Coupon code" />
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-12 ">
@@ -100,8 +97,6 @@
                                         <table>
                                             <tbody>
                                                 <tr class="cart-subtotal">
-                                                    <th>Subtotal</th>
-                                                    <td><span class="amount">@(total).000vnd</span></td>
                                                 </tr>
                                                 <tr class="shipping">
                                                     <th>Shipping</th>
@@ -110,13 +105,13 @@
                                                             <li>
                                                                 <input type="radio" id="ShippingMethod1" name="flexRadioShippingMethod" />
                                                                 <label for="ShippingMethod1">
-                                                                    Flat Rate: <span class="amount">0</span>
+                                                                    Giao hàng tiết kiệm
                                                                 </label>
                                                             </li>
                                                             <li>
                                                                 <input type="radio" id="ShippingMethod2" name="flexRadioShippingMethod" />
                                                                 <label for="ShippingMethod2">
-                                                                    Free Shipping
+                                                                    VNPost
                                                                 </label>
                                                             </li>
                                                             <li></li>
@@ -127,7 +122,8 @@
                                                 <tr class="order-total">
                                                     <th>Total</th>
                                                     <td>
-                                                        <strong><span class="amount">@(total).000VND</span></strong>
+
+                                                        <strong><span class="amount">@(total.Value.ToString("N0").Replace(",", ".") + ".000" + " VND")</span></strong>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -145,11 +141,24 @@
         }
         else
         {
-            <h1>Không có sản phẩm nào trong giỏ hàng của bạn.</h1>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5 mx-auto">
+                        <p style="height: 50px;" class="btn btn-danger">Không có sản phẩm nào trong giỏ hàng của bạn.</p>
+                    </div>
+                </div>
+            </div>
         }
     }
     else
     {
-        <h1>Không có sản phẩm nào trong giỏ hàng của bạn.</h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 mx-auto">
+                    <p style="height: 50px;" class="btn btn-danger">Không có sản phẩm nào trong giỏ hàng của bạn.</p>
+                </div>
+            </div>
+        </div>
     }
 </div>

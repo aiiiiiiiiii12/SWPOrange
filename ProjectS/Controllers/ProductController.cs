@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -24,19 +25,40 @@ namespace Project.Controllers
         }
 
 
-        public IActionResult Index(int id, bool gender, int mode)
+
+        public IActionResult Index(int id, int mode)
         {
 
             List<SubCategory> subCategories = new List<SubCategory>();
             var list = (from p in _shopContext.Products
                         where p.SubCategoryID == id
                         select p).ToList();
+
+            if(list == null)
+            {
+                TempData["subCate"] = "";
+                return Redirect("/Home/Index");
+            }
+               
+
             var subCate = (from c in _shopContext.SubCategory
                            where c.SubCategoryId == id
                            select c).FirstOrDefault();
+
+            if (subCate == null)
+            {
+                TempData["subCate"] = "";
+                return Redirect("/Home/Index");
+            }
             var cateGory = (from c in _shopContext.Categories
                             where c.CategoryId == subCate.CateogoryId
                             select c).First();
+
+            if (cateGory == null)
+            {
+                TempData["subCate"] = "";
+                return Redirect("/Home/Index");
+            }
             if (cateGory != null)
             {
                 var e = _shopContext.Entry(cateGory);
@@ -45,10 +67,8 @@ namespace Project.Controllers
             }
             subCategories.Sort((x, y) => x.SubCategoryId.CompareTo(y.SubCategoryId));
             ViewData["id"] = id;
-            ViewData["gender"] = gender;
             ViewData["listSubCate"] = subCategories;
             ViewData["subCate"] = subCate;
-            ViewData["gender"] = gender;
 
             if (mode == 1)
             {
@@ -80,6 +100,25 @@ namespace Project.Controllers
             {
                 return RedirectToAction("Index", "Home", new { mode = "EDetailProduct" });
             }
+
+
+            int check = 0;
+
+            foreach (var item in _shopContext.productdetails.Where(p => p.productId == id))
+            {
+                if (item.quantity > 0)
+                {
+                    check = 1;
+                    break;
+                }
+            }
+
+            if (check == 0)
+            {
+                product.IsAvailble = false;
+                _shopContext.SaveChanges();
+            }
+
 
             string size = "";
             string color = "";
@@ -121,53 +160,33 @@ namespace Project.Controllers
 
         public IActionResult AddWishList(int id, int choice)
         {
-            if (!_signInManager.IsSignedIn(User))
+            string? cookieValue = Request.Cookies["wish"];
+            if (cookieValue == null)
             {
-
-                string? cookieValue = Request.Cookies["wish"];
-                if (cookieValue == null)
+                var option = new CookieOptions()
                 {
-                    var option = new CookieOptions()
-                    {
-                        Expires = DateTime.Now.AddDays(90)
-                    };
-                    Response.Cookies.Append("wish", id + ",", option);
-                }
-                else
-                {
-                    var option = new CookieOptions()
-                    {
-                        Expires = DateTime.Now.AddDays(90)
-                    };
-                    Response.Cookies.Append("wish", cookieValue + id + ",", option);
-                }
+                    Expires = DateTime.Now.AddDays(90)
+                };
+                Response.Cookies.Append("wish", id + ",", option);
             }
             else
             {
-                var p = _shopContext.Products.Find(id);
 
-                if (p != null)
+                var option = new CookieOptions()
                 {
-                    var l = _shopContext.WishList.Where(p => p.UserId == _signInManager.UserManager.GetUserId(User) && p.ProductId == id).ToList();
-
-                    if (l.Count != 0)
-                    {
-                        _shopContext.WishList.Add(new WishList()
-                        {
-                            UserId = _signInManager.UserManager.GetUserId(User),
-                            ProductId = p.ProductId
-                        });
-                    }
-
-
-                    _shopContext.SaveChanges();
-                }
+                    Expires = DateTime.Now.AddDays(90)
+                };
+                Response.Cookies.Append("wish", cookieValue + id + ",", option);
             }
+
 
             if (choice == 1)
                 return Redirect("/Home/Index");
+            string CompleteUrl = Request.Headers["Referer"].ToString();
 
-            return Redirect("/Home/Index");
+            return Redirect(CompleteUrl);
+         
+
         }
 
 
@@ -184,7 +203,7 @@ namespace Project.Controllers
                     if (!string.IsNullOrEmpty(c))
                         wishList.Add(int.Parse(c));
                 }
-                wishList.Remove(id);
+                wishList.RemoveAll(item => item == id);
                 if (wishList.Count == 0)
                 {
                     Response.Cookies.Delete("wish");
@@ -205,24 +224,16 @@ namespace Project.Controllers
                 }
             }
 
-            var wish = _shopContext.WishList.Where(p => p.UserId == _signInManager.UserManager.GetUserId(User) && p.ProductId == id).ToList();
-            if (wish.Count > 0)
-            {
-                _shopContext.WishList.Remove(wish[0]);
-                _shopContext.SaveChanges();
-            }
 
             return Redirect("/Product/WishList");
+
+
+
         }
 
         public IActionResult WishList()
         {
             List<int> list = new List<int>();
-
-            if (_signInManager.IsSignedIn(User))
-            {
-                list.AddRange(_shopContext.WishList.Where(p => p.UserId == _signInManager.UserManager.GetUserId(User)).Select(p => p.ProductId).ToList());
-            }
 
 
             string? cookieValue = Request.Cookies["wish"];
@@ -237,5 +248,8 @@ namespace Project.Controllers
 
             return View(_shopContext.Products.Where(c => list.Contains(c.ProductId)).ToList());
         }
+
+
+
     }
 }

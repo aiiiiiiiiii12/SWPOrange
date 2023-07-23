@@ -79,6 +79,7 @@ namespace Project.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
+            [MinLength(6, ErrorMessage = " {0} phải có từ {1} kí tự")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -153,6 +154,7 @@ namespace Project.Areas.Identity.Pages.Account
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError("Input.Password", "Mật khẩu không đúng.");
                     return Page();
                 }
             }

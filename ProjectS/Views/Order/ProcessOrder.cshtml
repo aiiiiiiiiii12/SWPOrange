@@ -1,12 +1,11 @@
-﻿
-@using Project.Data
+﻿@using Project.Data
 @inject ShopContext _shopContext
 @{
     List<BillDetail> list = new List<BillDetail>();
 
-    if (TempData["bill"] != null)
+    if (ViewData["bill"] != null)
     {
-        var l = TempData["bill"] as Bill;
+        var l = ViewData["bill"] as Bill;
 
         list = _shopContext.BillDetails.Where(p => p.BillId == l.BillId).ToList();
     }

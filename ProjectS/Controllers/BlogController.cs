@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Project.Data;
@@ -69,6 +70,7 @@ namespace Project.Controllers
             }
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult ViewBlog()
         {
             List<Blog> blog = _context.Blogs.ToList();
@@ -108,29 +110,30 @@ namespace Project.Controllers
             Blog blog = _context.Blogs.Include(b => b.ImageBlogs)
                                       .Include(b => b.Products)
                                       .FirstOrDefault(b => b.Blogid == id);
+
+            if (blog == null)
+            {
+                TempData["checked"] = "";
+                return Redirect("/Blog/ViewBlog");
+            }
+
             return View(blog);
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         public IActionResult CreateBlog()
         {
             return View();
         }
 
+        [Authorize(Roles = "Seller, Admin, Marketing")]
         [HttpPost]
         public IActionResult CreateBlog(Blog blog)
         {
-            if (blog.content == null || blog.content2 == null || blog.name == null || blog.DateUp == null)
-            {
-                TempData["ErrorMessage"] = "Please enter all information!";
-                return Redirect($"CreateBlog?id={blog.Blogid}");
-            }
-            else
-            {
-                _context.Blogs.Add(blog);
-                _context.SaveChanges();
+            _context.Blogs.Add(blog);
+            _context.SaveChanges();
 
-                return Redirect($"CreateImage?id={blog.Blogid}");
-            }
+            return Redirect($"CreateImage?id={blog.Blogid}");
 
         }
 
@@ -167,7 +170,8 @@ namespace Project.Controllers
             }
             else
             {
-                return RedirectToAction("ViewBlog");
+                TempData["checked"] = "";
+                return Redirect("/Blog/ViewBlog");
             }
         }
 
@@ -196,8 +200,13 @@ namespace Project.Controllers
             List<ImageBlog> img = _context.ImageBlogs
                 .Where(image => image.BlogId == id)
                 .ToList();
+            var blog = _context.Blogs.FirstOrDefault(b => b.Blogid == id);
 
-
+            if (blog == null)
+            {
+                TempData["checked"] = "";
+                return Redirect("/Blog/ViewBlog");
+            }
 
             return View(img);
         }
@@ -249,6 +258,21 @@ namespace Project.Controllers
             }
 
             return RedirectToAction("ViewBlog");
+        }
+
+        public IActionResult searchBlogByName(string name)
+        {
+            List<Blog> blog = null;
+
+            if (name != null)
+            {
+                blog = _context.Blogs.Where(x => x.name.Contains(name)).ToList();
+            }
+            else
+
+                blog = _context.Blogs.ToList();
+
+            return View(blog);
         }
 
 

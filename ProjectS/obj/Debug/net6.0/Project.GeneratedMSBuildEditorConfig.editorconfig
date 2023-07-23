@@ -244,6 +244,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Trycode/SWP/Main/SWP/ProjectS/Views/Admin/searchProductByName.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cc2VhcmNoUHJvZHVjdEJ5TmFtZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Trycode/SWP/Main/SWP/ProjectS/Views/Admin/UpdateProduct.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXBkYXRlUHJvZHVjdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -266,6 +270,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Trycode/SWP/Main/SWP/ProjectS/Views/Blog/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmxvZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Trycode/SWP/Main/SWP/ProjectS/Views/Blog/searchBlogByName.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmxvZ1xzZWFyY2hCbG9nQnlOYW1lLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Trycode/SWP/Main/SWP/ProjectS/Views/Blog/Update.cshtml]
@@ -328,8 +336,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXERldGFpbEJpbGwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Trycode/SWP/Main/SWP/ProjectS/Views/Seller/DoneOrder.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXERvbmVPcmRlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Trycode/SWP/Main/SWP/ProjectS/Views/Seller/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Trycode/SWP/Main/SWP/ProjectS/Views/Seller/SearchBillByName.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXFNlYXJjaEJpbGxCeU5hbWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Trycode/SWP/Main/SWP/ProjectS/Views/Seller/SearchViewOrderByEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXFNlYXJjaFZpZXdPcmRlckJ5RW1haWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Trycode/SWP/Main/SWP/ProjectS/Views/Seller/ViewAll.cshtml]

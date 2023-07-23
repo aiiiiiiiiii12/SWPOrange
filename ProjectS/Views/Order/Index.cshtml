@@ -70,8 +70,8 @@
                                                 <input type="text" name="email" />
                                             </div>
                                             <div class="col-md-6">
-                                                Note:
-                                                <input type="text" name="email" />
+                                                Phone:
+                                                <input type="text" name="phone" />
                                             </div>
 
                                         @if (TempData["Error"] != null)
@@ -83,6 +83,18 @@
                                                 </div>
                                         }
 
+                                        @if (TempData["Errorr"] != null)
+                                        {
+                                                <div style="margin-bottom: 15px" class="row">
+                                                    <div style="padding-left: 0px" class="col-md-6">
+                                                        <p class="text-danger"> </p>
+                                                    </div>
+                                                    <div style="padding-left: 20px" class="col-md-6">
+                                                        <p class="text-danger">@TempData["Errorr"] </p>
+                                                    </div>
+                                                </div>
+                                             
+                                        }
                                         </div>
                                         <div id="add" class="row">
 
@@ -244,17 +256,13 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-7">
-                                    <br><h3 style="font-weight: 600;color: black;">TOTAL ORDERS </h3>
-                                    <br><h6>Total</h6>
                                     <br><h3 style="font-weight: 600;color: black;">TOTAL</h3>
-                                    Value added tax included<br>
+                                    Ship<br>
                                     <br><h3 style="font-weight: 600;color: black;">TOTAL ORDERS</h3>
                                 </div>
                                 <div class="col-5">
-                                    <br><a href="#"><h3 style="font-weight: 600;color: black; text-decoration: underline;">FIX</h3><br></a>
-                                    <br><h6>>@ViewData["total"].000VND</h6>
                                     <br><h3 style="font-weight: 600;color: black;">@ViewData["total"].000VND</h3>
-                                    317.273 VND<br>
+                                    0 VND<br><br>
                                     <h3 style="font-weight: 600;color: black;">@ViewData["total"].000VND</h3>
                                 </div>
                             </div>

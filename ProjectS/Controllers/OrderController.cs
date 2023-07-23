@@ -47,15 +47,28 @@ namespace Project.Controllers
 
 
         [HttpPost]
-        public IActionResult ProcessOrder(string email, string total, string payment, string address)
+        public IActionResult ProcessOrder(string email, string total, string payment, string address, string phone)
         {
-            
+
 
             if (string.IsNullOrEmpty(email))
             {
                 TempData["Error"] = "Không được để rỗng";
                 return RedirectToAction("Index", "Order");
             }
+
+            if (string.IsNullOrEmpty(phone) || phone.Length < 9)
+            {
+                TempData["Errorr"] = "Sai định dạng";
+                return RedirectToAction("Index", "Order");
+            }
+
+            if (int.TryParse(phone, out _) == false)
+            {
+                TempData["Errorr"] = "Sai định dạng";
+                return RedirectToAction("Index", "Order");
+            }
+
             if (payment == "2")
             {
                 TempData["publicemail"] = email;
@@ -85,15 +98,28 @@ namespace Project.Controllers
                     return RedirectToAction("Index", "Order");
                 }
                 var newBill = CreateBill(email, total, "1", address);
-                TempData["bill"] = newBill;
+                if (ViewData.ContainsKey("bill"))
+                {
+                    ViewData.Remove("bill");
+                }
+                if (newBill != null)
+                {
+                    ViewData["bill"] = newBill;
+                }
 
             }
-            else{
+            else
+            {
                 return RedirectToAction("Index", "Order");
             }
 
 
-           
+
+            return View();
+        }
+        public IActionResult ProcessOrder()
+        {
+
             return View();
         }
         private Bill CreateBill(string email, string totalAmount, string paymentCode, string address)
@@ -109,9 +135,13 @@ namespace Project.Controllers
 
             foreach (var b in _shopContext.Bills.Where(c => c.BillStatus == "0").Select(c => c.sellerId).ToList())
             {
-                var pair = myDictionary.FirstOrDefault(x => x.Key == b);
-                myDictionary[pair.Key] = myDictionary[pair.Key] + 1;
-            }
+			   var pair = myDictionary.FirstOrDefault(x => x.Key == b);
+
+				if (!pair.Equals(default(KeyValuePair<string, int>)))
+				{
+					myDictionary[pair.Key] = myDictionary[pair.Key] + 1;
+				}
+			}
 
             var minPair = myDictionary.MinBy(pair => pair.Value);
 
@@ -214,11 +244,7 @@ namespace Project.Controllers
         }
 
 
-        public IActionResult ProcessOrder()
-        {
-          
-            return View();
-        }
+
 
         public List<CartItem> getListItem()
         {
@@ -327,9 +353,7 @@ namespace Project.Controllers
             var paymentExecution = new PaymentExecution() { payer_id = PayerID };
             var executedPayment = new Payment() { id = paymentId }.Execute(apiContext, paymentExecution);
 
-            // Xử lý các bước tiếp theo sau khi thanh toán thành công
-            // Ví dụ: Cập nhật trạng thái đơn hàng, gửi email xác nhận, v.v.
-            // Lấy địa chỉ giao hàng
+     
             var shippingAddress = executedPayment.transactions[0].item_list.shipping_address;
             string addressString = $"{shippingAddress.line1}, {shippingAddress.line2}, {shippingAddress.city}, {shippingAddress.state}, {shippingAddress.postal_code}, {shippingAddress.country_code}";
 
@@ -337,8 +361,16 @@ namespace Project.Controllers
             string publictotal = TempData["publictotal"] as string;
             var newBill = CreateBill(publicemail, publictotal, "2", addressString);
 
-            TempData["bill"] = newBill;
-            return RedirectToAction("ProcessOrder");
+            if (ViewData.ContainsKey("bill"))
+            {
+                ViewData.Remove("bill");
+            }
+            if (newBill != null)
+            {
+                ViewData["bill"] = newBill;
+            }
+
+            return View("ProcessOrder");
         }
     }
 

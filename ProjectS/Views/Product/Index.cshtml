@@ -28,7 +28,7 @@
                                     }
                                     else
                                     {
-                                        <a asp-controller="Product" asp-action="Index" asp-route-gender="@ViewData["gender"]" asp-route-id="@l.SubCategoryId" style="font-size: 17px; margin-right:25px">@l.Name</a>
+                                        <a asp-controller="Product" asp-action="Index"  asp-route-id="@l.SubCategoryId" style="font-size: 17px; margin-right:25px">@l.Name</a>
                                     }
                                 }
                             }
@@ -39,8 +39,8 @@
                                 Tìm kiếm theo giá
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a asp-route-mode="1" asp-route-gender="@ViewData["gender"]" asp-route-id="@ViewData["id"]" asp-controller="Product" class="dropdown-item">Giá: Giá thấp đến cao</a></li>
-                                <li><a asp-route-mode="2" asp-route-gender="@ViewData["gender"]" asp-route-id="@ViewData["id"]" asp-controller="Product" class="dropdown-item">Giá: giá cao đến thấp</a></li>
+                                <li><a asp-route-mode="1"  asp-route-id="@ViewData["id"]" asp-controller="Product" class="dropdown-item">Giá: Giá thấp đến cao</a></li>
+                                <li><a asp-route-mode="2"  asp-route-id="@ViewData["id"]" asp-controller="Product" class="dropdown-item">Giá: giá cao đến thấp</a></li>
                             </ul>
                         </div>
                     </div>
@@ -59,19 +59,17 @@
                         <div class="product foo">
                             <div class="product__inner">
                                 <div class="pro__thumb">
-                                    <a href="#">
+                                    <a href="/Product/DetailProduct?id=@l.ProductId">
                                         <img src="@l.ImageMain" alt="product images">
                                     </a>
                                 </div>
                                 <div class="product__hover__info">
                                     <ul class="product__action">
-                                        <li><a asp-controller="Product" asp-action="DetailProduct" asp-route-id="@l.ProductId" title="Quick View" class="quick-view modal-view detail-link"><span class="ti-plus"></span></a></li>
-                                        <li><a title="Add TO Cart" asp-action="Index" asp-controller="Cart"><span class="ti-shopping-cart"></span></a></li>
+                                        <li><a asp-controller="Product" asp-action="DetailProduct" asp-route-id="@l.ProductId" title="View" class="quick-view modal-view detail-link"><span class="ti-eye"></span></a></li>
+                                        <li> <a data-bs-toggle="tooltip" title="Add To Wishlist" class="add-to-cart scroll-link" asp-route-id="@l.ProductId" asp-action="AddWishList" asp-controller="Product"><span class="ti-heart"></span></a></li>
                                     </ul>
                                 </div>
-                                <div class="add__to__wishlist">
-                                    <a data-bs-toggle="tooltip" title="Add To Wishlist" class="add-to-cart" asp-action="" asp-controller="Product"><span class="ti-heart"></span></a>
-                                </div>
+                               
 
                             </div>
                             <div class="product__details">
@@ -93,8 +91,6 @@
                                             <li class="new__price">@(l.ProductPrice - l.Discount).000vnd</li>
                                         }
                                     }
-
-
                                 </ul>
                             </div>
                         </div>
@@ -113,3 +109,23 @@
         </div>
     </div>
 </section>
+
+<script>
+    var links = document.querySelectorAll(".scroll-link");
+    for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener("click", function (event) {
+            event.preventDefault();
+            var scrollPos = window.scrollY;
+            localStorage.setItem("scrollPos", scrollPos);
+            window.location.href = this.href;
+        });
+    }
+
+    window.onload = function () {
+        var scrollPos = localStorage.getItem("scrollPos");
+        if (scrollPos) {
+            window.scrollTo({ top: scrollPos, behavior: 'auto' });
+            localStorage.removeItem("scrollPos");
+        }
+    };
+</script>

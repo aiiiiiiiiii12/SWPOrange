@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="~/dashbroadcss/vendor/charts/c3charts/c3.css">
     <link rel="stylesheet" href="~/dashbroadcss/vendor/fonts/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="~/dashbroadcss/vendor/addEdit-Product/add-edit-Product.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <title>Dashboard</title>
 </head>
 @{
@@ -26,6 +27,7 @@
     var isAdmin = user.Identity.IsAuthenticated && user.IsInRole("Admin");
     var isMarketing = user.Identity.IsAuthenticated && user.IsInRole("Marketing");
     var isSeller = user.Identity.IsAuthenticated && user.IsInRole("Seller");
+    var user1 = SignInManager.UserManager.GetUserAsync(User).Result;
 }
 
 <!-- Đoạn mã HTML khác trong layout -->
@@ -44,27 +46,42 @@
         <!-- navbar -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="/admin/index">Dash Broad</a>
+                <a class="navbar-brand" href="/admin/index">Dash Board</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse " id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto navbar-right-top">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li style="margin-top: 20px; border-right: 0px;" class="nav-item">
+                                @{
 
+                                    var email = user1.Email;
+                                    var username = email.Substring(0, email.IndexOf("@"));
+                                }
+                                <a style="margin-top : 10px"> @username</a>
+                            </li>
+                        }
                         <li class="nav-item dropdown nav-user">
                             <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="~/dashbroadcss/images/avatar-1.jpg" alt="" class="user-avatar-md rounded-circle"></a>
                             <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
-                               @* <div class="nav-user-info">
-                                    <h5  style="padding-left: 15px" class="mb-0 text-white nav-user-name">Hoàng
-                                    </h5>
+                                @* <div class="nav-user-info">
+                                <h5  style="padding-left: 15px" class="mb-0 text-white nav-user-name">Hoàng
+                                </h5>
                                 </div>*@
+
+                               
+
                                 <a class="dropdown-item" href="#">
                                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                                         <button id="logout" type="submit" class="dropdown-item nav-link btn btn-link text-dark">Đăng xuất</button>
                                     </form>
                                 </a>
+                          
                             </div>
                         </li>
+
                     </ul>
                 </div>
             </nav>
@@ -110,11 +127,20 @@
                                     <a class="nav-link" href="/Seller/Order" data-toggle="collapse" aria-expanded="false" data-target="#submenu-4" aria-controls="submenu-4"><i class="fab fa-fw fa-wpforms"></i>Order</a>
                                     <div id="submenu-4" class="collapse submenu" style="">
                                         <ul class="nav flex-column">
+                                            @if (isAdmin)
+                                         {
                                             <li class="nav-item">
                                                 <a class="nav-link" href="/Seller/ViewAll">View All Order</a>
                                             </li>
+                                          }
+                                            @if (isSeller)
+                                            {
                                             <li class="nav-item">
                                                 <a class="nav-link" href="/Seller/ViewOrder">Order for Seller</a>
+                                            </li>
+                                            }
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="/Seller/DoneOrder">All Order Done</a>
                                             </li>
 
                                         </ul>
@@ -161,7 +187,9 @@
                                             <li class="nav-item">
                                                 <a class="nav-link" href="/Admin/Roles">Add Roles</a>
                                             </li>
-
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="/admin/members">Users Manage</a>
+                                            </li>
 
                                         </ul>
                                     </div>
@@ -192,13 +220,6 @@
             <div class="row">
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                     Made by <a href="https://www.facebook.com/phongnv0/">Phong Nguyễn</a>.
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="text-md-right footer-links d-none d-sm-block">
-                        <a href="javascript: void(0);">About</a>
-                        <a href="javascript: void(0);">Support</a>
-                        <a href="javascript: void(0);">Contact Us</a>
-                    </div>
                 </div>
             </div>
         </div>

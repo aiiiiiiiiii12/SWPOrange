@@ -10,15 +10,15 @@
 }
 @using Project.Data
 @inject ShopContext _shopContext
-<div class="ht__bradcaump__area" style="background: rgba(0, 0, 0, 0) url(/images/bg/2.jpg) no-repeat scroll center center / cover ;">
+<div  class="ht__bradcaump__area" style="margin-top: 10px; height: 400px; background: rgba(0, 0, 0, 0) url(/images/bg/2.jpg) no-repeat scroll center center / cover ;">
     <div class="ht__bradcaump__wrap">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="bradcaump__inner text-center">
-                        <h2 class="bradcaump-title">Product Details</h2>
+                        <h style="margin-top: 10px;"2 class="bradcaump-title">Product Details</h>
                         <nav class="bradcaump-inner">
-                            <a class="breadcrumb-item" href="index.html">Home</a>
+                            <a class="breadcrumb-item" >OrangeShop</a>
                             <span class="brd-separetor">/</span>
                             <span class="breadcrumb-item active">Product Details</span>
                         </nav>
@@ -108,7 +108,7 @@
                             <li>@(Model.ProductPrice - Model.Discount).000vnd</li>
                         }
                     </ul>
-                    <form asp-action="index" asp-controller="Cart" method="post" id='myform'>
+                    <form class="scroll-form" asp-action="index" asp-controller="Cart" method="post" id='myform'>
                         <div class="pro__dtl__color">
                             <h2 class="title__5">Choose Colour</h2>
                             <ul class="pro__choose__color">
@@ -403,6 +403,23 @@
         }
     });
 
+</script>
+
+<script>
+    document.querySelector(".scroll-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        var scrollPos = window.scrollY;
+        localStorage.setItem("scrollPos", scrollPos);
+        this.submit(); // Gửi yêu cầu tới Action About trong HomeController
+    });
+
+    window.onload = function () {
+        var scrollPos = localStorage.getItem("scrollPos");
+        if (scrollPos) {
+            window.scrollTo({ top: scrollPos, behavior: 'auto' });
+            localStorage.removeItem("scrollPos");
+        }
+    };
 </script>
 
 

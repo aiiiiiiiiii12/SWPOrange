@@ -165,17 +165,22 @@ namespace Project.Controllers
                 }
             }
 
-            return View(cartItems);
+            return View(getListItem());
         }
 
         [HttpPost]
         public IActionResult Index(IFormCollection f)
         {
+           
 
             var color = f["color"];
             var size = f["size"];
             var qua = int.Parse(f["Quantity"]);
             int pId = int.Parse(f["productId"]);
+
+            if (string.IsNullOrEmpty(color) || string.IsNullOrEmpty(size))
+                return Redirect("/Home/Index");
+
             List<CartItem> cartItems = new List<CartItem>();
             if (_SignInManager.IsSignedIn(User))
             {
@@ -230,7 +235,8 @@ namespace Project.Controllers
                 }
             }
             cartItems.AddRange(getListItem());
-            return View(cartItems);
+            string referrerUrl = Request.Headers["Referer"].ToString();
+            return Redirect(referrerUrl);
         }
 
         public List<CartItem> getListItem()
