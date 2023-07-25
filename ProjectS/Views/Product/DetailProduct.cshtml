@@ -10,15 +10,15 @@
 }
 @using Project.Data
 @inject ShopContext _shopContext
-<div  class="ht__bradcaump__area" style="margin-top: 10px; height: 400px; background: rgba(0, 0, 0, 0) url(/images/bg/2.jpg) no-repeat scroll center center / cover ;">
+<div class="ht__bradcaump__area" style="margin-top: 10px; height: 400px; background: rgba(0, 0, 0, 0) url(/images/bg/2.jpg) no-repeat scroll center center / cover ;">
     <div class="ht__bradcaump__wrap">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="bradcaump__inner text-center">
-                        <h style="margin-top: 10px;"2 class="bradcaump-title">Product Details</h>
+                        <h style="margin-top: 10px;" 2 class="bradcaump-title">Product Details</h>
                         <nav class="bradcaump-inner">
-                            <a class="breadcrumb-item" >OrangeShop</a>
+                            <a class="breadcrumb-item">OrangeShop</a>
                             <span class="brd-separetor">/</span>
                             <span class="breadcrumb-item active">Product Details</span>
                         </nav>
@@ -250,35 +250,39 @@
                     <!-- Start Single Content -->
                     @foreach (var l in Model.Feedbacks)
                     {
-                        var user = _shopContext.Users.Find(l.UserId);
-                        if (user != null)
+                        if (l.FeedbackStatus == "1")
                         {
-                            var UserName = user.Email.Substring(0, user.Email.IndexOf("@"));
+                            var user = _shopContext.Users.Find(l.UserId);
+                            if (user != null)
+                            {
+                                var UserName = user.Email.Substring(0, user.Email.IndexOf("@"));
 
-                            <div class="review__address__inner">
-                                <!-- Start Single Review -->
-                                <div class="pro__review ans">
-                                    <div class="review__thumb">
-                                        <img src="~/images/avatar/User-avatar.svg.png" alt="review images" style="height: 70px; width: 70px;border-radius:100%; border: 2px solid">
-                                    </div>
-                                    <div class="review__details">
-
-                                        <div class="review__info">
-
-                                            <h4>@UserName</h4>
-
-
+                                <div class="review__address__inner">
+                                    <!-- Start Single Review -->
+                                    <div class="pro__review ans">
+                                        <div class="review__thumb">
+                                            <img src="~/images/avatar/User-avatar.svg.png" alt="review images" style="height: 70px; width: 70px;border-radius:100%; border: 2px solid">
                                         </div>
-                                        <div class="review__date">
-                                            <span>@l.FeedbackDate</span>
+                                        <div class="review__details">
+
+                                            <div class="review__info">
+
+                                                <h4>@UserName</h4>
+
+
+                                            </div>
+                                            <div class="review__date">
+                                                <span>@l.FeedbackDate</span>
+                                            </div>
+                                            <p>@l.FeedbackDetail</p>
+                                            <br />
                                         </div>
-                                        <p>@l.FeedbackAnswer</p>
-                                        <br />
                                     </div>
+                                    <!-- End Single Review -->
+
                                 </div>
-                                <!-- End Single Review -->
+                            }
 
-                            </div>
                         }
                     }
                 </div>
